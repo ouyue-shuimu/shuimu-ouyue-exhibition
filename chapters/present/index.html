@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="zh-CN" data-model-url="">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#071315" />
+    <meta name="description" content="《水木之间·生生瓯越》第五层《今古相接》——轻触木构，读懂表达与观看中的古今相遇。" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>今古相接｜水木之间·生生瓯越</title>
+    <script src="../../journey-bridge.js"></script>
+    <script type="module" crossorigin src="./assets/index-xidong-v4.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CcugJ3Yv.css">
+    <link rel="stylesheet" crossorigin href="./assets/xidong-entry.css">
+  </head>
+  <body>
+    <main class="experience" aria-label="今古相接交互粒子体验">
+      <div class="scene" id="scene">
+        <canvas id="webgl" aria-label="以泰顺溪东桥实景为参考的木构廊桥，从暖木实体渐变为月白粒子，可用鼠标或手指扰动"></canvas>
+        <div class="wash wash-a" aria-hidden="true"></div>
+        <div class="wash wash-b" aria-hidden="true"></div>
+
+        <header class="masthead">
+          <p class="eyebrow">水木之间 · 生生瓯越</p>
+          <div class="chapter">
+            <span>第五层</span>
+            <i aria-hidden="true"></i>
+            <span>今古相接</span>
+          </div>
+        </header>
+
+        <section class="title-block" aria-labelledby="title">
+          <p class="seal" aria-hidden="true">瓯越</p>
+          <h1 id="title">今古相接</h1>
+          <p class="subtitle">木化为流，旧意新生</p>
+        </section>
+
+        <aside class="progress" aria-label="粒子化进度">
+          <div class="progress-ring" aria-hidden="true">
+            <svg viewBox="0 0 52 52">
+              <circle class="ring-track" cx="26" cy="26" r="22"></circle>
+              <circle class="ring-value" cx="26" cy="26" r="22"></circle>
+            </svg>
+            <span id="progressNumber">0</span>
+          </div>
+          <div class="progress-copy">
+          <span>桥体流变</span>
+            <small>STRUCTURE IN FLOW</small>
+          </div>
+        </aside>
+
+        <button class="interaction-copy story-trigger" id="interactionCopy" type="button" aria-haspopup="dialog" aria-controls="storyDialog">
+          <span class="touch-mark" aria-hidden="true"></span>
+          <span class="interaction-title">点击画面，读三句话</span>
+          <small>轻点读句 · 拖动拨开粒子</small>
+        </button>
+
+        <aside class="flow-control" aria-label="画面变化控制">
+          <label for="flowSlider">拖动滑杆</label>
+          <span class="flow-help" id="flowHelp">先看完整廊桥</span>
+          <span class="flow-end" aria-hidden="true">木</span>
+          <input id="flowSlider" type="range" min="0" max="100" value="0" step="1" aria-label="画面流变进度" aria-describedby="flowHelp" aria-orientation="vertical" />
+          <span class="flow-end" aria-hidden="true">流</span>
+          <small>拖动后粒子渐显</small>
+        </aside>
+
+        <div class="stage-label" id="stageLabel" aria-live="polite">
+          <span>01</span>
+          <p>溪东桥 · 木构仍在</p>
+        </div>
+
+        <div class="scroll-cue" aria-hidden="true">
+          <span>向下滚动</span>
+          <i></i>
+        </div>
+
+        <button class="motion-toggle" id="motionToggle" type="button" aria-pressed="false">
+          <span class="sound-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span>流动中</span>
+        </button>
+
+        <div class="fallback" id="fallback" hidden>
+            <p>此浏览器暂不支持粒子画面。</p>
+          <small>请使用最新版 Chrome、Edge 或 Safari 打开。</small>
+        </div>
+
+        <div class="loading" id="loading" aria-live="polite">
+          <span></span>
+          <p>构木成桥</p>
+        </div>
+      </div>
+
+      <div class="scroll-story" aria-hidden="true">
+        <div data-stage="0"></div>
+        <div data-stage="1"></div>
+        <div data-stage="2"></div>
+      </div>
+    </main>
+    <dialog id="storyDialog" class="story-dialog" aria-labelledby="storyHeading" aria-describedby="storyInstructions">
+      <div class="story-wash" aria-hidden="true"></div>
+      <button id="storyClose" class="story-close" type="button" aria-label="关闭文字，返回粒子画面">返回画面 <span aria-hidden="true">×</span></button>
+      <section class="story-content">
+        <p class="story-heading" id="storyHeading">今古相接</p>
+        <div class="story-lines" aria-live="polite" aria-relevant="additions"></div>
+        <div class="story-footer">
+          <span class="story-count" id="storyCount">一 / 三</span>
+          <button id="storyNext" type="button">再点一下，读下一句</button>
+        </div>
+        <p class="story-instructions" id="storyInstructions">点击空白处或下方文字，逐句阅读；按 Esc 返回。</p>
+      </section>
+    </dialog>
+    <script src="../../chapter-effects.js"></script>
+  </body>
+</html>

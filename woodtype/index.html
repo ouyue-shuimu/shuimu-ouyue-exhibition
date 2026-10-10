@@ -1,0 +1,225 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#d6c4a8">
+  <meta name="description" content="水木之间·生生瓯越——木活字造句互动体验。拣字、排版、上墨，印下一句话。">
+  <title>活字造句｜水木之间·生生瓯越</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='9' fill='%2337483e'/%3E%3Crect x='9' y='9' width='46' height='46' fill='none' stroke='%23c8a56c' stroke-width='2'/%3E%3Cpath d='M14 20h36M32 14v35M17 48l15-18 15 18' fill='none' stroke='%23f1e5d1' stroke-width='3'/%3E%3C/svg%3E">
+  <style>
+    @font-face{font-family:"Source Han Serif SC";src:url("assets/SourceHanSerifSC-Light.otf") format("opentype");font-weight:300;font-style:normal;font-display:swap}
+    @font-face{font-family:"I.Ming";src:url("assets/I.Ming-8.10.ttf") format("truetype");font-weight:400;font-style:normal;font-display:swap}
+    :root{--ink:#282a25;--pine:#30433b;--pine-soft:#53675d;--river:#778479;--river-pale:#aeb6a6;--silk:#e6d8c1;--silk-light:#f1e9da;--paper:#f7f0e3;--gold:#a67e4e;--wood:#815839;--wood-dark:#392719;--wood-mid:#67442d;--wood-light:#c39365;--line:#bda98c;--shadow:0 12px 28px rgba(49,38,23,.15)}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px;background:#d8c9b0;color:var(--ink);font-family:"Source Han Serif SC","Source Han Serif",serif;font-weight:300;font-synthesis:none}button,input{font:inherit;font-weight:300}button{cursor:pointer}button:disabled{opacity:.38;cursor:not-allowed}button:focus-visible,input:focus-visible{outline:3px solid #c59455;outline-offset:3px}strong,b,h1,h2,h3{font-weight:300}
+    .page{min-height:100vh;background:linear-gradient(#d8c5a7 0,#ddd0bb 36%,#c8c9b7 100%)}
+    .hero{position:relative;min-height:236px;background:#d8c5a8 url("assets/shanshui-banner.png") center 55%/cover no-repeat;border-bottom:1px solid #a99577;overflow:hidden}
+    .hero:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(239,223,192,.06),rgba(243,230,207,.36) 31%,rgba(245,233,214,.39) 69%,rgba(231,213,180,.04));pointer-events:none}
+    .hero-inner{position:relative;z-index:1;max-width:1640px;margin:auto;min-height:236px;padding:19px 31px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+    .hero-top{position:absolute;top:17px;left:31px;color:#394b40;font-size:12px;letter-spacing:.16em;background:rgba(244,233,212,.7);border:1px solid rgba(161,131,92,.62);padding:6px 11px}
+    .hero h1{font-size:clamp(30px,3.55vw,57px);line-height:1.1;letter-spacing:.12em;margin:2px 0 14px;color:#27352d;text-shadow:0 1px 9px rgba(245,235,215,.85)}
+    .hero-subtitle{border-top:1px solid #ad895a;border-bottom:1px solid #ad895a;padding:5px 28px;color:#3c4c3e;font-size:19px;letter-spacing:.36em;background:rgba(244,235,215,.56)}
+    .hero-copy{font-size:13px;line-height:1.6;letter-spacing:.12em;color:#445a4d;margin:13px 0 0;text-shadow:0 1px 5px #f3e8d5}
+    .bench{position:relative;max-width:1660px;margin:-9px auto 0;padding:0 20px 23px;display:grid;grid-template-columns:minmax(300px,.92fr) minmax(400px,1.18fr) minmax(300px,.96fr);gap:18px;align-items:stretch}
+    .bench:before{content:"";position:absolute;inset:83px 0 0;background:linear-gradient(180deg,rgba(111,124,108,.58),rgba(122,133,115,.82));box-shadow:inset 0 8px 22px rgba(55,70,58,.12);pointer-events:none}
+    .station{position:relative;min-width:0;display:flex;flex-direction:column;padding-top:3px}.station-head{height:49px;display:flex;align-items:center;justify-content:center}.plaque{margin:0;min-width:156px;display:inline-block;text-align:center;padding:6px 24px 8px;border-radius:5px;background:var(--pine);color:#f7ead0;border:1px solid #bb9863;box-shadow:0 0 0 3px var(--pine),0 4px 12px rgba(43,43,30,.22);font-size:23px;line-height:1;letter-spacing:.28em;text-indent:.28em}
+    .station-note{height:37px;display:flex;align-items:center;justify-content:center;margin:0;color:#42574b;font-size:12px;letter-spacing:.08em;text-align:center}
+    .case{flex:1;min-height:505px;padding:17px;background:linear-gradient(90deg,#4d3020,#67462e 13%,#543623 88%,#3c281c);border:3px solid #2c2119;box-shadow:inset 0 0 0 3px #8b623d,inset 0 0 0 7px #4a3020,0 11px 17px rgba(43,35,21,.27);border-radius:7px}
+    .category-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px;margin-bottom:13px}.category-tabs button{padding:8px 2px;border:1px solid #9b8061;color:#3d3a2d;background:#eadac1;border-radius:3px;white-space:nowrap;font-size:13px}.category-tabs button[aria-selected="true"]{background:var(--pine);color:#f5ead3;border-color:#c3a46d}.category-tabs button:hover:not([aria-selected="true"]){background:#f4e7d1}
+    .type-tray{min-height:380px;padding:8px;background:#3e2b1e;border:3px solid #38261b;box-shadow:inset 0 0 0 2px #8d6748;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));grid-auto-rows:minmax(57px,1fr);gap:8px;align-content:start}.type-block{min-width:0;display:grid;place-items:center;border:1px solid #99683e;background:linear-gradient(125deg,#d9b48a,#bf9064 73%,#a66e48);box-shadow:inset 1px 1px #edcfaa,2px 3px 0 #2f221a;color:#25231c;font-size:29px;line-height:1;border-radius:2px;transition:transform .14s,filter .14s}.type-block:hover{transform:translateY(-3px);filter:brightness(1.07)}.type-block:active{transform:translateY(1px)}
+    .custom-form{display:flex;gap:7px;margin-top:14px}.custom-form input{min-width:0;flex:1;padding:10px 11px;color:#292a23;background:#f2e6d2;border:1px solid #a07c5a;border-radius:3px;font-size:13px}.custom-form button{white-space:nowrap;padding:8px 12px;border:1px solid #b99a69;border-radius:3px;background:var(--pine);color:#f5ead7;font-size:13px}.custom-form button:hover{background:#3e594b}
+    .case-foot{margin:10px 2px 0;color:#ddc8a7;font-size:11px;line-height:1.5;letter-spacing:.04em}
+    .composition-shell{flex:1;display:flex;flex-direction:column;min-height:505px}.compose-current{height:36px;display:flex;align-items:center;justify-content:space-between;gap:10px;color:#3e5246;font-size:12px;padding:0 3px}.compose-current strong{font-size:14px;letter-spacing:.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:75%;color:#2e3c32}.compose-current strong.empty{color:#738075}
+    .bed{flex:1;min-height:320px;border:13px solid #5a3924;border-radius:7px;background:linear-gradient(120deg,#82583c,#6e482f 45%,#795235);box-shadow:inset 0 0 0 3px #9e714e,inset 0 13px 22px #2f1d13a3,0 9px 18px #3e332573;padding:22px;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:72px;align-content:center;gap:9px}.bed:empty:after{content:"点选字匣中的字块，开始排句";grid-column:1/-1;align-self:center;text-align:center;color:#e5d3b7;font-size:16px;letter-spacing:.15em;text-shadow:0 1px 2px #38261d}.placed{position:relative;display:grid;place-items:center;border:1px solid #7e5131;border-radius:3px;background:linear-gradient(130deg,#deb78d,#bb895e 74%,#a87348);box-shadow:inset 1px 1px #efd4ac,2px 3px 0 #412b1d;color:#24231c;font-size:32px}.placed span{transform:scaleX(-1)}.placed[aria-pressed="true"]{outline:2px solid #efd7a9;outline-offset:2px;box-shadow:0 0 0 4px #355447,2px 3px 0 #412b1d}.placed.drag-over{outline:3px dashed #f5dfb9}.placed:hover{filter:brightness(1.06)}
+    .compose-help{display:flex;justify-content:space-between;gap:8px;min-height:32px;align-items:center;color:#e6d9bf;font-size:11px;letter-spacing:.05em}.compose-help span:last-child{white-space:nowrap;color:#f0d3a3}
+    .controls{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:11px}.controls button{background:#eee0c9;border:1px solid #9f825e;color:#3f4539;padding:8px 11px;border-radius:3px;font-size:13px;min-height:38px}.controls button:hover:not(:disabled){background:#f9ecd5}.controls .spacer{flex:1}.controls .danger{color:#714632}
+    .presets{margin-top:auto;padding:10px 0 0;border-top:1px solid rgba(237,219,184,.55)}.presets-label{font-size:11px;color:#f0e2c9;margin:0 0 7px;letter-spacing:.11em}.preset-list{display:flex;flex-wrap:wrap;gap:6px}.preset-list button{background:rgba(241,231,210,.88);border:1px solid #b9a077;border-radius:3px;padding:7px 9px;color:#3f4a3d;font-size:11px}.preset-list button:hover{background:#fff1da}
+    .print-shell{flex:1;min-height:505px;display:flex;flex-direction:column}.paper{position:relative;flex:1;min-height:367px;padding:25px 22px;background:var(--paper);border:1px solid #d4c3a7;box-shadow:3px 7px 12px rgba(45,42,30,.23);overflow:hidden}.paper:before{content:"";position:absolute;inset:11px;border:1px solid #d9c9aa;pointer-events:none}.paper-top{text-align:center;font-size:12px;letter-spacing:.25em;color:#617067;position:relative}.paper-window{position:relative;border:1px solid #635c4d;min-height:192px;margin:29px 10px 0;display:grid;place-items:center;padding:21px;background:linear-gradient(transparent 98%,#d7c9b0 100%) 0 0/100% 34px}.paper-window:before{content:"";position:absolute;inset:6px;border:1px solid #c3b49c;pointer-events:none}.paper-text{position:relative;text-align:center;color:#8b8a7c;font-size:clamp(24px,2.15vw,37px);letter-spacing:.11em;line-height:1.6;word-break:break-all}.paper:not(.printed) .paper-text.has-phrase{opacity:.5}.paper.printed .paper-text{color:#252d27;animation:imprint .5s ease both}.paper-bottom{position:relative;display:flex;align-items:center;justify-content:center;gap:11px;margin-top:30px;color:#8b8b79;font-size:11px;letter-spacing:.16em}.paper-bottom:before,.paper-bottom:after{content:"";width:42px;height:1px;background:#b9a887}.paper-waves{position:absolute;bottom:10px;left:14%;width:72%;height:46px;opacity:.42;background:repeating-radial-gradient(ellipse at 50% 100%,transparent 0 15px,#8eaa9a 16px 17px,transparent 18px 33px);mask-image:linear-gradient(transparent,#000)}
+    .print-actions{display:flex;align-items:center;justify-content:space-between;gap:9px;min-height:77px}.print-hint{color:#ede1c8;font-size:11px;line-height:1.5;max-width:145px}.print-btn{border:1px solid #c6a56c;outline:3px solid var(--pine);outline-offset:0;background:var(--pine);color:#f8edd9;border-radius:3px;padding:12px 17px;white-space:nowrap;font-size:19px;letter-spacing:.17em;box-shadow:0 5px 9px rgba(43,48,35,.26)}.print-btn:hover:not(:disabled){background:#466052}.download-btn{width:100%;padding:9px;border:1px solid #d8c397;background:#ede2ca;color:#2c4539;border-radius:3px;font-size:13px}.download-btn:hover{background:#f6ebd4}.download-btn[hidden]{display:none}
+    .footer{max-width:1660px;margin:auto;padding:13px 22px 24px;display:flex;justify-content:space-between;gap:10px;color:#48594a;font-size:11px;letter-spacing:.07em}.visually-hidden{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+
+    .impression-preview{width:100%;height:auto;display:block;position:relative;mix-blend-mode:multiply}
+    .impression-preview[hidden]{display:none}
+    .paper.printed .paper-text{display:none}
+    .paper.printed .impression-preview{animation:ink-transfer .8s ease both}
+    .placed.inked span{color:#101b14;text-shadow:0 0 1px #17261d}
+    .ink-adjust-btn{border:0;background:transparent;color:#efe0c2;text-decoration:underline;text-underline-offset:4px;padding:7px 0 13px;font-size:12px}
+    .ink-adjust-btn[hidden]{display:none}
+    .ink-dialog{width:min(900px,calc(100% - 28px));max-height:92dvh;overflow:auto;border:1px solid #a2865c;border-radius:7px;padding:25px;background:#ece0ca;color:#344638;box-shadow:0 25px 100px #1b201ba6}
+    .ink-dialog::backdrop{background:rgba(29,36,30,.62);backdrop-filter:blur(4px)}
+    .ink-dialog-head{display:flex;justify-content:space-between;gap:20px;align-items:start}
+    .ink-dialog h2{margin:7px 0 10px;font-size:29px;letter-spacing:.16em}
+    .ink-dialog .eyebrow{margin:0;color:#7c725d;font-size:12px;letter-spacing:.13em}
+    .ink-close{border:1px solid #b09a79;border-radius:3px;background:transparent;color:#4e5647;padding:7px 10px}
+    .ink-dialog-copy{margin:0 0 16px;line-height:1.7;font-size:14px;color:#67705e}
+    #inkCanvas{display:block;width:100%;height:auto;border-radius:4px;touch-action:none;cursor:grab;box-shadow:0 5px 13px #52422b38}
+    #inkCanvas:active{cursor:grabbing}
+    .ink-meter{display:flex;gap:14px;align-items:center;margin:17px 0;color:#54624f;font-size:13px}
+    .ink-meter progress{flex:1;width:100%;height:7px;accent-color:#344c3d}
+    .ink-meter span{min-width:78px;white-space:nowrap}
+    .ink-dialog-actions{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+    .ink-dialog-actions button{border:1px solid #aa906b;border-radius:3px;padding:10px 15px;color:#455342;background:#f2e8d5}
+    .ink-dialog-actions .ink-finish{margin-left:auto;background:#344b3d;color:#f3e8d1;border-color:#344b3d}
+    .ink-dialog-actions button:disabled{opacity:.4}
+    .ink-dialog-tip{margin:14px 0 0;font-size:11px;color:#7e816e;line-height:1.7}
+    @keyframes ink-transfer{from{opacity:.2;transform:translateY(3px)}to{opacity:1;transform:none}}
+    @media(max-width:600px){.ink-dialog{padding:17px}.ink-dialog h2{font-size:25px}.ink-dialog-actions button{padding:9px 10px;font-size:13px}.ink-dialog-copy{font-size:12px}.ink-dialog-actions .ink-finish{margin-left:0}.ink-dialog-tip{font-size:10px}}
+
+    @keyframes imprint{from{opacity:.18;filter:blur(3px);transform:scale(1.03)}to{opacity:1;filter:none;transform:none}}
+    @media(max-width:1180px){.bench{grid-template-columns:minmax(290px,.85fr) minmax(360px,1.15fr)}.print-station{grid-column:1/-1}.print-shell{min-height:auto;display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:15px;align-items:center}.paper{min-height:250px}.print-actions{display:block}.print-hint{max-width:none;margin:0 0 15px}.print-btn,.download-btn{width:100%}.download-btn{grid-column:2}.paper-window{min-height:130px;margin-top:15px}.paper-bottom{margin-top:12px}}
+    @media(max-width:780px){.hero{min-height:205px;background-position:center 58%}.hero-inner{min-height:205px;padding:25px 14px 15px}.hero-top{top:10px;left:12px;font-size:10px}.hero h1{font-size:30px;margin:14px 0 10px}.hero-subtitle{font-size:16px}.hero-copy{font-size:11px}.bench{grid-template-columns:1fr;gap:13px;padding:0 13px 15px;margin-top:0}.bench:before{inset:53px 0 0}.station-head{height:48px}.station-note{height:28px}.case,.composition-shell,.print-shell{min-height:auto}.case{padding:13px}.type-tray{min-height:250px;grid-auto-rows:53px}.type-block{font-size:25px}.bed{min-height:230px;grid-auto-rows:61px}.placed{font-size:27px}.compose-help{font-size:10px}.print-shell{display:block}.paper{min-height:295px}.paper-window{min-height:140px}.print-actions{display:flex}.print-hint{margin:0;max-width:170px}.print-btn{width:auto}.download-btn{margin-bottom:3px}}
+    @media(max-width:420px){.hero h1{font-size:26px}.hero-copy{max-width:330px}.category-tabs button{font-size:11px;padding:7px 0}.type-tray{gap:6px;padding:6px;grid-auto-rows:48px}.type-block{font-size:23px}.bed{padding:15px;gap:6px;border-width:10px;grid-auto-rows:55px}.placed{font-size:25px}.controls button{padding:7px 8px;font-size:12px}.paper{padding:20px 12px}.paper-window{margin-left:4px;margin-right:4px}.print-btn{font-size:16px;padding:11px 10px}.compose-help span:last-child{display:none}}
+    @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+
+    /* The same 1000 × 380 plate is used at every stage, without text reflow. */
+    .bed{display:flex;align-items:center;justify-content:center;padding:12px}
+    .plate-surface{position:relative;width:100%;aspect-ratio:1000/380;container-type:inline-size}
+    .plate-surface:empty:after{content:"点选字匣中的字块，开始排句";position:absolute;inset:0;display:grid;place-items:center;color:#e5d3b7;font-size:14px}
+    .plate-surface .placed{position:absolute;font-size:8cqw;padding:0;line-height:1}
+    .plate-surface .placed span{transform:translateY(-.4cqw) scaleX(-1)}
+    .type-block,.placed{font-family:"I.Ming",serif;font-weight:400}
+    .type-block canvas{display:block;width:90%;height:90%;object-fit:contain;pointer-events:none}
+    .placed canvas{display:block;width:100%;height:100%;pointer-events:none}
+    .paper-text[hidden]{display:none}
+    .alignment-controls{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:8px 0;color:#344b3f;font-size:12px}
+    .alignment-controls button{padding:5px 9px;border:1px solid #a28b67;border-radius:3px;background:#eee0c9;color:#3f4539}
+    .alignment-controls button[aria-pressed="true"]{background:#30433b;color:#f7ead0}
+    .impression-preview.draft{opacity:.3}
+    .paper-window{padding:0}
+  </style>
+</head>
+<body>
+  <link rel="stylesheet" href="../journey-shared.css"><script src="../journey-bridge.js"></script>
+  <div class="page">
+    <header class="hero">
+      <div class="hero-inner">
+        <a class="hero-top" href="./start.html" style="text-decoration:none" aria-label="返回水木成器山水入口">← 第一章 · 水木成器</a>
+        <h1>水木之间 · 生生瓯越</h1>
+        <div class="hero-subtitle">活字造句</div>
+        <p class="hero-copy">拣字入匣 · 移字成句 · 上墨印心　<a href="./intro.html" style="text-underline-offset:4px" aria-label="回看瑞安木活字来历与工艺介绍">回看活字来历</a></p>
+      </div>
+    </header>
+    <main class="bench" aria-label="木活字互动工作台">
+      <section class="station" aria-labelledby="type-title">
+        <div class="station-head"><h2 class="plaque" id="type-title">字匣</h2></div>
+        <p class="station-note">轻点木字，放入版框</p>
+        <div class="case">
+          <div class="category-tabs" id="categoryTabs" role="tablist" aria-label="字匣分类"></div>
+          <div class="type-tray" id="typeTray" role="group" aria-label="可选木活字"></div>
+          <form class="custom-form" id="customForm"><label class="visually-hidden" for="customInput">输入想用的汉字</label><input id="customInput" type="text" maxlength="4" autocomplete="off" placeholder="字匣中没有？输入 1—4 字"><button type="submit">加入版框</button></form>
+          <p class="case-foot">繁体字匣 · 每句最多 12 字 · 自定义字按输入保留</p>
+        </div>
+      </section>
+      <section class="station" aria-labelledby="compose-title">
+        <div class="station-head"><h2 class="plaque" id="compose-title">排版</h2></div>
+        <p class="station-note">整版左右镜像，行序保持不变</p>
+        <div class="composition-shell">
+          <div class="compose-current"><span id="count">0 / 12 字</span><strong class="empty" id="sentenceText">尚未排字</strong></div>
+          <div class="bed"><div class="plate-surface" id="typeBed" role="group" aria-label="排字版框"></div></div>
+          <div class="alignment-controls" role="group" aria-label="字版对齐方式"><span>字版对齐</span><button type="button" data-align="left" aria-pressed="true">左对齐</button><button type="button" data-align="center" aria-pressed="false">居中</button><button type="button" data-align="right" aria-pressed="false">右对齐</button><span id="alignmentHint">印页：右对齐</span></div>
+          <div class="compose-help"><span>点选字块后调序；电脑上也可拖动</span><span>整版镜像 · 行序不变</span></div>
+          <div class="controls" aria-label="排版操作"><button id="moveLeft" type="button">← 左移</button><button id="moveRight" type="button">右移 →</button><button id="remove" type="button">移除</button><span class="spacer"></span><button id="undo" type="button">撤销</button><button class="danger" id="clear" type="button">清空</button></div>
+          <div class="presets"><p class="presets-label">也可以从一句短句开始</p><div class="preset-list" id="presetList"></div></div>
+        </div>
+      </section>
+      <section class="station print-station" aria-labelledby="print-title">
+        <div class="station-head"><h2 class="plaque" id="print-title">印页</h2></div>
+        <p class="station-note">让刚刚排好的话留在纸上</p>
+        <div class="print-shell">
+          <div class="paper" id="paper" aria-label="印页预览"><div class="paper-top">水木之间 · 生生瓯越</div><div class="paper-window"><span class="paper-text" id="paperText">等你排下一句话</span><canvas class="impression-preview" id="impressionPreview" hidden aria-label="带有油墨肌理的刷印文字"></canvas></div><div class="paper-bottom" id="paperStatus">木活字数字印页</div><div class="paper-waves" aria-hidden="true"></div></div>
+          <div class="print-actions"><span class="print-hint" id="printHint">先给字面刷墨，再覆纸刷印。</span><button class="print-btn" id="printBtn" type="button">开始刷墨</button></div>
+          <button class="ink-adjust-btn" id="reinkBtn" type="button" hidden>重新刷墨 · 再试一次</button>
+          <button class="download-btn" id="downloadBtn" type="button" hidden>下载我的印页 PNG ↓</button>
+        </div>
+      </section>
+    </main>
+    <section style="text-align:center;padding:24px 16px 32px;color:#344b3f" aria-label="继续瓯越行旅"><p id="journeySaveHint" style="font-size:15px">完成刷印后，点击底部「确认原句 · 下一程」继续。</p><button id="journeyContinue" hidden disabled type="button" style="font:inherit;font-size:18px;padding:12px 24px;border:1px solid #8c7857;border-radius:3px;background:#344b3f;color:#f8efd9;cursor:pointer">确认原句 · 去听一出戏</button></section>
+    <footer class="footer"><span>水木成器，见字如见人。</span><span>老宋体风格数字演绎 · 非瑞安原字模复刻</span></footer>
+    <div class="visually-hidden" id="announcer" aria-live="polite"></div>
+  </div>
+
+  <dialog class="ink-dialog" id="inkDialog" aria-labelledby="inkTitle" aria-describedby="inkInstruction">
+    <div class="ink-dialog-head"><div><p class="eyebrow">排字 → 刷墨 → 刷印</p><h2 id="inkTitle">刷墨上版</h2></div><button type="button" class="ink-close" id="closeInkBtn">返回版框</button></div>
+    <p class="ink-dialog-copy" id="inkInstruction">按住版面来回刷动，让每枚字的笔画都吃到墨。</p>
+    <canvas id="inkCanvas" width="1000" height="380" aria-label="刷墨与拓印版面，用鼠标或手指拖动完成操作。"></canvas>
+    <div class="ink-meter"><progress id="inkProgress" max="100" value="0" aria-label="上墨进度"></progress><span id="inkProgressText" aria-live="polite">上墨 0%</span></div>
+    <div class="ink-dialog-actions"><button type="button" id="resetInkBtn">重新上墨</button><button type="button" class="ink-finish" id="finishInkBtn" disabled>完成上墨 →</button></div>
+    <p class="ink-dialog-tip">鼠标按住拖动，或用手指来回划动，亲手完成刷墨与拓印。调整字句后，需要重新上墨。</p>
+  </dialog>
+  <script src="./type-layout.js"></script>
+  <script src="./ink-workshop.js"></script>
+  <script>
+    (() => {
+      'use strict';
+      const groups=[
+        {name:'山水',chars:'山水江海河溪潮雲風雨月日橋岸舟帆'},
+        {name:'人文',chars:'甌越文脈書卷詩句印字記憶傳承千年'},
+        {name:'生活',chars:'你我心意家鄉路相逢同行燈火安樂'},
+        {name:'自然',chars:'木林花草石天春夏秋冬雪光竹葉'},
+        {name:'其他',chars:'成器之間生生不息有無可為向遠歸來'}
+      ];
+      const presets=['水木之間生生甌越','一江水路千年甌越','以木為橋連接兩岸','揀字排句印下心意'];
+      const max=12;const $=id=>document.getElementById(id);let letters=[],selected=-1,history=[],group=0,dragFrom=-1,printed='',printVersion=0,printing=false,impressionCanvas=null;
+      let alignment='left';
+      const inkWorkshop=window.createInkWorkshop({getLetters:()=>letters,getAlignment:()=>alignment,onChange:state=>updateInk(state)});
+      function announce(message){$('announcer').textContent='';requestAnimationFrame(()=>$('announcer').textContent=message)}
+      function save(){history.push({letters:[...letters],alignment});if(history.length>40)history.shift()}
+      function setPrintReady(ready){$('journeyContinue').disabled=!ready;try{window.top.JourneyHost?.gate();}catch{}}
+      function invalidate(){printVersion++;printed='';impressionCanvas=null;printing=false;inkWorkshop.reset();setPrintReady(false);$('journeySaveHint').textContent='完成刷印后，确认这句话，让它随行至结章。';$('paper').classList.remove('printed');$('impressionPreview').hidden=true;$('downloadBtn').hidden=true;$('reinkBtn').hidden=true;$('paperStatus').textContent='木活字数字印页';$('printHint').textContent='先给字面刷墨，再覆纸刷印。'}
+      function updateInk(state){$('printBtn').textContent=state.ready?'覆纸刷印':'开始刷墨';$('reinkBtn').hidden=!state.ready;if(!printed)$('printHint').textContent=state.ready?'墨已上好，覆一张纸，印下这句话。':state.amount?'还有字面未吃墨，继续刷匀。':'先给字面刷墨，再覆纸刷印。';document.querySelectorAll('.placed').forEach((tile,index)=>tile.classList.toggle('inked',(inkWorkshop.amounts()[index]||0)>.25));}
+      function setLetters(next,message){save();letters=next.slice(0,max);selected=letters.length?letters.length-1:-1;invalidate();render();window.JourneySfx?.cue('wood');if(message)announce(message)}
+      function addChars(raw){const chars=Array.from(raw).filter(ch=>/[\p{Script=Han}，。！？]/u.test(ch));if(!chars.length){announce('请输入汉字。');return}if(letters.length>=max){announce('版框最多容纳 12 字。');return}const added=chars.slice(0,max-letters.length);setLetters([...letters,...added],`已加入 ${added.join('')}。`)}
+      function renderTray(){const tabs=$('categoryTabs');tabs.replaceChildren();groups.forEach((item,index)=>{const button=document.createElement('button');button.type='button';button.role='tab';button.setAttribute('aria-selected',String(index===group));button.textContent=item.name;button.addEventListener('click',()=>{group=index;renderTray()});tabs.append(button)});const tray=$('typeTray');tray.replaceChildren();Array.from(new Set(Array.from(groups[group].chars))).forEach(ch=>{const button=document.createElement('button');button.type='button';button.className='type-block';const glyph=document.createElement('canvas');glyph.setAttribute('aria-hidden','true');window.TypeLayout.drawFace(glyph,ch,false);button.append(glyph);button.setAttribute('aria-label',`加入“${ch}”字`);button.addEventListener('click',()=>addChars(ch));tray.append(button)})}
+      function reorder(from,to){if(from<0||to<0||from>=letters.length||to>=letters.length||from===to)return;save();const next=[...letters];const [item]=next.splice(from,1);next.splice(to,0,item);letters=next;selected=to;invalidate();render();window.JourneySfx?.cue('wood');announce('字块已调整顺序。')}
+      function render(){const sentence=window.TypeLayout.reading(letters);$('count').textContent=`${letters.length} / ${max} 字`;$('sentenceText').textContent=sentence||'尚未排字';$('sentenceText').classList.toggle('empty',!sentence);$('paperText').textContent=sentence||'等你排下一句话';$('paperText').classList.toggle('has-phrase',!!sentence);const preview=$('impressionPreview');if(!printed){inkWorkshop.preview(preview);preview.hidden=!letters.length;preview.classList.add('draft');}$('paperText').hidden=!!letters.length;document.querySelectorAll('[data-align]').forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.align===alignment)));$('alignmentHint').textContent='印页：'+({left:'右对齐',center:'居中',right:'左对齐'}[alignment]);const layout=window.TypeLayout.positions(letters,alignment);const bed=$('typeBed');bed.replaceChildren();letters.forEach((ch,index)=>{const tile=document.createElement('button');tile.type='button';tile.className='placed';const position=layout[index];Object.assign(tile.style,{left:position.x/10+'%',top:position.y/3.8+'%',width:'11.8%',height:118/380*100+'%'});tile.draggable=true;tile.setAttribute('aria-label',`第 ${index+1} 字：${ch}。点击选中`);tile.setAttribute('aria-pressed',String(index===selected));const face=document.createElement('canvas');face.setAttribute('aria-hidden','true');window.TypeLayout.drawFace(face,ch);tile.append(face);tile.addEventListener('click',()=>{selected=index;render()});tile.addEventListener('keydown',event=>{if(event.altKey&&event.key==='ArrowLeft'){event.preventDefault();reorder(index,index-1)}if(event.altKey&&event.key==='ArrowRight'){event.preventDefault();reorder(index,index+1)}});tile.addEventListener('dragstart',event=>{dragFrom=index;event.dataTransfer.effectAllowed='move';event.dataTransfer.setData('text/plain',String(index))});tile.addEventListener('dragover',event=>{event.preventDefault();tile.classList.add('drag-over')});tile.addEventListener('dragleave',()=>tile.classList.remove('drag-over'));tile.addEventListener('drop',event=>{event.preventDefault();tile.classList.remove('drag-over');reorder(dragFrom,index);dragFrom=-1});tile.addEventListener('dragend',()=>{dragFrom=-1;document.querySelectorAll('.drag-over').forEach(el=>el.classList.remove('drag-over'))});bed.append(tile)});$('moveLeft').disabled=selected<=0;$('moveRight').disabled=selected<0||selected>=letters.length-1;$('remove').disabled=selected<0;$('undo').disabled=!history.length;$('clear').disabled=!letters.length;$('printBtn').disabled=!letters.length||printing;updateInk({ready:inkWorkshop.ready(),amount:Math.round(inkWorkshop.amounts().reduce((a,b)=>a+b,0)/Math.max(letters.length,1)*100)})}
+      async function print(){
+        if(!letters.length||printing)return;
+        if(!inkWorkshop.ready()){inkWorkshop.open();return;}
+        printing=true;$('printBtn').disabled=true;$('printBtn').textContent='正在刷印…';
+        const version=printVersion,phrase=letters.join('');
+        try{
+          const completed=await inkWorkshop.coverAndPrint();
+          if(!completed||version!==printVersion)return;
+          const art=await inkWorkshop.impression(phrase);
+          if(version!==printVersion)return;
+          impressionCanvas=art;printed=window.TypeLayout.reading(letters);
+          setPrintReady(true);
+          $('journeySaveHint').textContent='将原句「'+printed+'」留入结章的瓯越诗笺。';
+          const preview=$('impressionPreview');preview.width=art.width;preview.height=art.height;preview.getContext('2d').drawImage(art,0,0);preview.hidden=false;preview.classList.remove('draft');
+          $('paper').classList.remove('printed');void $('paper').offsetWidth;$('paper').classList.add('printed');
+          $('paperStatus').textContent='墨落纸上 · 字留此刻';$('printHint').textContent='深浅与露白，留下这一次上墨的痕迹。';$('downloadBtn').hidden=false;
+          announce('刷印完成，下载的印页会保留这份墨迹。');
+        }finally{if(version===printVersion){printing=false;$('printBtn').disabled=false;$('printBtn').textContent=printed?'再印一张':'覆纸刷印';}}
+      }
+      async function download(){
+        if(!printed||!impressionCanvas)return;
+        const phrase=printed,art=impressionCanvas,canvas=document.createElement('canvas');canvas.width=1600;canvas.height=1080;
+        const ctx=canvas.getContext('2d');if(!ctx){announce('此浏览器无法生成图片。');return}
+        const bg=ctx.createLinearGradient(0,0,1600,1080);bg.addColorStop(0,'#f7f0e3');bg.addColorStop(1,'#e6dcc8');ctx.fillStyle=bg;ctx.fillRect(0,0,1600,1080);
+        ctx.strokeStyle='#b9a785';ctx.lineWidth=3;ctx.strokeRect(70,68,1460,944);ctx.strokeStyle='#d2c3a8';ctx.lineWidth=2;ctx.strokeRect(88,86,1424,908);
+        ctx.fillStyle='#31483b';ctx.font='300 38px "Source Han Serif SC",serif';ctx.textAlign='center';ctx.fillText('水木之间 · 生生瓯越',800,190);
+        ctx.strokeStyle='#a88352';ctx.beginPath();ctx.moveTo(550,235);ctx.lineTo(1050,235);ctx.stroke();
+        ctx.save();ctx.globalCompositeOperation='multiply';ctx.drawImage(art,100,279,1400,532);ctx.restore();
+        ctx.fillStyle='#647566';ctx.font='300 31px "Source Han Serif SC",serif';ctx.fillText('木活字造句 · 数字印页',800,850);
+        ctx.strokeStyle='#9aaa94';ctx.lineWidth=2;for(let i=0;i<3;i++){ctx.beginPath();ctx.moveTo(490,910+i*20);ctx.bezierCurveTo(645,872+i*20,955,950+i*20,1110,910+i*20);ctx.stroke()}
+        const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob){announce('图片生成失败，请再试一次。');return}
+        const url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download=`水木之间-活字印页-${phrase}.png`;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);announce('带墨迹的印页已开始下载。');
+      }
+      $('customForm').addEventListener('submit',event=>{event.preventDefault();const field=$('customInput');addChars(field.value.trim());field.value='';field.focus()});$('moveLeft').addEventListener('click',()=>reorder(selected,selected-1));$('moveRight').addEventListener('click',()=>reorder(selected,selected+1));$('remove').addEventListener('click',()=>{if(selected<0)return;const next=[...letters];const [removed]=next.splice(selected,1);setLetters(next,`已移除 ${removed} 字。`)});$('undo').addEventListener('click',()=>{if(!history.length)return;const previous=history.pop();letters=previous.letters;alignment=previous.alignment;selected=letters.length?letters.length-1:-1;invalidate();render();announce('已撤销上一步。')});$('clear').addEventListener('click',()=>{if(letters.length)setLetters([],'版框已清空。')});$('printBtn').addEventListener('click',print);$('downloadBtn').addEventListener('click',download);$('reinkBtn').addEventListener('click',()=>{invalidate();render();inkWorkshop.open()});
+      const presetList=$('presetList');presets.forEach(phrase=>{const button=document.createElement('button');button.type='button';button.textContent=phrase;button.setAttribute('aria-label',`排入短句：${phrase}`);button.addEventListener('click',()=>setLetters(window.TypeLayout.forPrinting(Array.from(phrase)),`已排入短句：${phrase}`));presetList.append(button)});
+      document.querySelectorAll('[data-align]').forEach(button=>button.addEventListener('click',()=>{if(alignment===button.dataset.align)return;save();alignment=button.dataset.align;invalidate();render();announce('字版对齐已更新，印页同步镜像。');}));
+      // A visit to the workbench starts with an empty plate; confirmed text belongs to the final poem only.
+      renderTray();render();setPrintReady(false);
+      $('journeyContinue').addEventListener('click',()=>{
+        const phrase=printed;
+        if(!phrase||phrase!==window.TypeLayout.reading(letters)){announce('请先完成这句话的刷印。');return;}
+        try{const old=JSON.parse(sessionStorage.getItem('shuimu.journey.v1')||'{}');sessionStorage.setItem('shuimu.journey.v1',JSON.stringify({...old,phrase,alignment,confirmedAt:new Date().toISOString()}));}
+        catch{ $('journeySaveHint').textContent='浏览器未允许保存这次行旅，请在正常浏览模式中打开后再继续。';return;}
+        if(window.top.JourneyHost)window.top.JourneyHost.go('chapter.html?chapter=opera');
+        else location.href='../chapter.html?chapter=opera';
+      });
+      document.fonts.load('400 80px "I.Ming"').then(()=>{renderTray();document.querySelectorAll('.placed canvas').forEach((canvas,i)=>window.TypeLayout.drawFace(canvas,letters[i]));if(!printed)inkWorkshop.preview($('impressionPreview'));}).catch(()=>announce('活字字库未能加载，请检查字体文件。'));
+    })();
+  </script>
+</body>
+</html>

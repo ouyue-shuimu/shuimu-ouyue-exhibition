@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>城中有声 · 水木之间</title>
+<link rel="stylesheet" href="./style.css?v=20261009-nanxi-notes3">
+</head>
+<body>
+<header>
+  <a href="./" class="brand">水木之间 <span>生生瓯越</span></a>
+  <span class="chapter">第二篇 · 城中有声</span>
+  <button id="editToggle" aria-expanded="false" aria-controls="editor">调整画面</button>
+</header>
+
+<div class="stage-viewport" id="stageViewport">
+  <div class="stage-box" id="stageBox">
+    <section class="stage" id="stage" aria-label="互动戏台">
+      <img class="layer stage-bg" src="https://zhouyungu1994-wq.github.io/ouyue-cloud-exhibition/assets/stage.png" alt="朱红与青绿相映的传统戏台，两侧乐师伴奏，台下观众静候">
+      <svg class="actor original-rig zhang" viewBox="0 0 1920 1080" role="img" aria-label="红袍张协，原画比例，头部与手臂轻摆">
+        <defs>
+          <image id="zhang-original" href="https://zhouyungu1994-wq.github.io/ouyue-cloud-exhibition/assets/zhang.png" width="1920" height="1080"/>
+          <clipPath id="zhang-body-clip" clipPathUnits="userSpaceOnUse"><path clip-rule="evenodd" d="M0 0 H1920 V1080 H0 Z M780,465 L900,465 L900,528 L854,534 L821,534 L780,528 Z M871,536 L985,515 L985,654 L887,654 L869,585 Z"/></clipPath>
+          <clipPath id="zhang-head-clip" clipPathUnits="userSpaceOnUse"><polygon points="780,465 900,465 900,528 854,537 821,537 780,528"/></clipPath>
+          <clipPath id="zhang-arm-clip" clipPathUnits="userSpaceOnUse"><polygon points="867,534 985,515 985,654 884,654 865,585"/></clipPath>
+        </defs>
+        <use href="#zhang-original" clip-path="url(#zhang-body-clip)"/>
+        <g class="rig-arm" style="--pivot:869px 552px"><use href="#zhang-original" clip-path="url(#zhang-arm-clip)"/></g>
+        <g class="rig-head" style="--pivot:841px 532px"><use href="#zhang-original" clip-path="url(#zhang-head-clip)"/></g>
+      </svg>
+      <svg class="actor original-rig pinnv" viewBox="0 0 1920 1080" role="img" aria-label="粉衣贫女，原画比例，头部与手臂轻摆">
+        <defs>
+          <image id="pinnv-original" href="https://zhouyungu1994-wq.github.io/ouyue-cloud-exhibition/assets/pinnv.png" width="1920" height="1080"/>
+          <clipPath id="pinnv-body-clip" clipPathUnits="userSpaceOnUse"><path clip-rule="evenodd" d="M0 0 H1920 V1080 H0 Z M1097,493 L1160,493 L1160,537 L1139,551 L1110,550 L1097,539 Z M1010,527 L1070,527 L1105,558 L1103,586 L1077,617 L1077,663 L1008,663 Z"/></clipPath>
+          <clipPath id="pinnv-head-clip" clipPathUnits="userSpaceOnUse"><polygon points="1097,493 1160,493 1160,537 1139,554 1110,553 1097,539"/></clipPath>
+          <clipPath id="pinnv-arm-clip" clipPathUnits="userSpaceOnUse"><polygon points="1010,527 1070,527 1108,555 1106,588 1080,617 1080,663 1008,663"/></clipPath>
+        </defs>
+        <use href="#pinnv-original" clip-path="url(#pinnv-body-clip)"/>
+        <g class="rig-arm" style="--pivot:1103px 570px"><use href="#pinnv-original" clip-path="url(#pinnv-arm-clip)"/></g>
+        <g class="rig-head" style="--pivot:1125px 549px"><use href="#pinnv-original" clip-path="url(#pinnv-head-clip)"/></g>
+      </svg>
+      <img class="layer mist" src="https://zhouyungu1994-wq.github.io/ouyue-cloud-exhibition/assets/mist.png" alt="">
+      <div class="curtain-window"><img class="curtain left" src="https://zhouyungu1994-wq.github.io/ouyue-cloud-exhibition/assets/curtain-left.png" alt=""><img class="curtain right" src="https://zhouyungu1994-wq.github.io/ouyue-cloud-exhibition/assets/curtain-right.png" alt=""></div>
+      <button class="shade" id="reveal" aria-label="点击拉开帷幕，播放唱段"><span>循光而入 · 点击启幕</span></button>
+    </section>
+  </div>
+
+  <div class="intro-shade show" id="introShade" role="dialog" aria-modal="true" aria-labelledby="cardTitle" aria-describedby="cardText">
+    <div class="intro-content">
+      <p class="intro-kicker">水木之间 · 生生瓯越</p>
+      <p class="intro-tag">第二篇</p>
+      <h2 class="intro-title" id="cardTitle">城中有声</h2>
+      <p class="intro-sub">一方戏台 · 一城烟火</p>
+      <div class="intro-text" id="cardText">
+        <p>从《张协状元》中贫女对张协的责问，<br class="intro-break">走进瓯越戏曲里的市井生活。</p>
+        <p>听一段唱腔，听见台上台下共同关切的情义与是非。</p>
+      </div>
+      <button class="intro-skip" id="introSkip">入席听戏 <span aria-hidden="true">→</span></button>
+      <p class="intro-hint">入席后，点击帷幕听戏</p>
+    </div>
+  </div>
+
+  <div class="subtitles" id="subtitles" aria-label="同步字幕"><span id="speaker"></span><span id="line"></span></div>
+  <div class="transport">
+    <button id="play">开帘听戏</button>
+    <label class="seek"><span id="time">00:00 / --:--</span><input type="range" id="progress" min="0" max="100" step=".1" value="0" aria-label="播放进度" disabled></label>
+    <button id="mute" aria-pressed="false">静音</button>
+    <button id="reset">合帘重看</button>
+    <button id="skip">跳过唱段</button>
+  </div>
+  <p class="status" id="status" role="status">移动鼠标，循光看戏；也可直接点击启幕。</p>
+</div>
+
+<main>
+  <div class="heading">
+    <p>一方戏台 · 一城烟火</p>
+    <h1 id="title">城中有声</h1>
+    <p id="intro"></p>
+  </div>
+  <section class="echo" id="echo" hidden tabindex="-1">
+    <p>余音入水</p>
+    <h2>戏起一方台，声入一座城。</h2>
+    <p>从一段唱腔，听见地方戏曲中的人情与世情。</p>
+    <button id="replay">再听一遍</button>
+    <button id="openOperaNotes" hidden>再看南戏介绍</button>
+  </section>
+  <footer>《水木之间·生生瓯越》数字云展 <span id="credit">唱段版本与来源待补充</span></footer>
+</main>
+
+<dialog class="opera-dialog" id="operaDialog" aria-labelledby="operaNotesTitle">
+  <div class="opera-dialog-head">
+    <p>唱毕入席 · 南戏手札</p>
+    <form method="dialog"><button aria-label="关闭南戏介绍">关闭</button></form>
+  </div>
+  <section class="opera-notes" aria-labelledby="operaNotesTitle">
+    <p class="opera-notes-kicker">听 · 见 · 留</p>
+    <h2 id="operaNotesTitle">听戏识南戏</h2>
+    <p class="opera-notes-lead">南戏又称“温州杂剧”“永嘉杂剧”，是宋元时期兴起于温州一带的戏曲形式。《张协状元》是现存最早、保存较完整的南戏剧本之一；贫女与张协的故事，让古老戏文里的情义与世态穿过时间，来到今天的戏台。</p>
+    <details class="opera-more">
+      <summary>继续读南戏 <span aria-hidden="true">＋</span></summary>
+      <div class="opera-more-content">
+        <p class="opera-more-intro">《张协状元》之外，以下四部作品合称“四大南戏”，也常简称“荆、刘、拜、杀”。</p>
+        <div class="opera-grid">
+          <details class="opera-card opera-card-featured">
+            <summary>
+              <span class="opera-card-label">重点读一出 · 温州故事</span>
+              <h3>《荆钗记》</h3>
+              <p class="opera-card-teaser">王十朋与钱玉莲以荆钗定情，因权势与误会几经离合。</p>
+              <span class="opera-card-action">展开故事 <span aria-hidden="true">＋</span></span>
+            </summary>
+            <div class="opera-card-detail">
+              <p>温州士子王十朋与钱玉莲以荆钗为信物订下婚约。王十朋赴试得中后拒绝权贵招赘，二人又因书信受阻、误会与权势阻挠而分离。经历曲折后，夫妻最终重逢。荆钗既是定情之物，也串起全剧对守信、情义与抗拒强权的书写。</p>
+              <a class="opera-card-source" href="https://www.mct.gov.cn/ggfw/zyjzzt/yanchu/yanchuwqhg/202407/t20240705_953897.html" target="_blank" rel="noopener noreferrer">故事与剧目介绍：文化和旅游部 ↗</a>
+            </div>
+          </details>
+          <details class="opera-card">
+            <summary>
+              <h3>《白兔记》</h3>
+              <p class="opera-card-teaser">刘知远、李三娘离散多年，白兔引出母子重逢。</p>
+              <span class="opera-card-action">展开故事 <span aria-hidden="true">＋</span></span>
+            </summary>
+            <div class="opera-card-detail">
+              <p>刘知远与李三娘成婚后，李家兄嫂嫌贫，对三娘百般欺凌。知远离家从军，三娘在磨房受苦并生下儿子咬脐郎。多年后，咬脐郎追逐白兔来到井边，与汲水的母亲相遇；白兔牵起寻亲线索，最终促成一家团圆。</p>
+              <a class="opera-card-source" href="https://openmuseum.tw/muse/digi_object/5ab29169cc0336867167cb8daf432422" target="_blank" rel="noopener noreferrer">故事来源：台湾音乐馆开放博物馆 ↗</a>
+            </div>
+          </details>
+          <details class="opera-card">
+            <summary>
+              <h3>《拜月亭》</h3>
+              <p class="opera-card-teaser">战乱中相遇的蒋世隆与王瑞兰，历经离合后团圆。</p>
+              <span class="opera-card-action">展开故事 <span aria-hidden="true">＋</span></span>
+            </summary>
+            <div class="opera-card-detail">
+              <p>战乱迫使王瑞兰与母亲逃难，也让书生蒋世隆和妹妹瑞莲失散。瑞兰与世隆途中相遇、患难相依并结为夫妻，却因门第之见遭父亲拆散。后来瑞兰在亭中拜月祈愿，亲人重逢、误会渐解，世隆与瑞兰终得团圆。</p>
+              <a class="opera-card-source" href="https://pedia.cloud.edu.tw/Entry/Detail/?search=%E6%8B%9C%E6%9C%88%E4%BA%AD&amp;title=%E6%8B%9C%E6%9C%88%E4%BA%AD" target="_blank" rel="noopener noreferrer">故事来源：台湾教育部教育百科 ↗</a>
+            </div>
+          </details>
+          <details class="opera-card">
+            <summary>
+              <h3>《杀狗记》</h3>
+              <p class="opera-card-teaser">杨氏设局劝夫，真假“尸体”照出朋友与手足的真心。</p>
+              <span class="opera-card-action">展开故事 <span aria-hidden="true">＋</span></span>
+            </summary>
+            <div class="opera-card-detail">
+              <p>孙华沉迷酒肉朋友，还把弟弟孙荣赶出家门。妻子杨氏杀死一只狗，将狗尸伪装成人形，试探孙华的朋友是否肯为他出力；朋友们纷纷推脱，弟弟孙荣却挺身相助。孙华由此看清谁值得信任，兄弟和好。故事借一场误会劝诫人珍惜手足、辨别虚情假意。</p>
+              <a class="opera-card-source" href="https://kotobank.jp/word/%E6%AE%BA%E7%8B%97%E8%A8%98-69166" target="_blank" rel="noopener noreferrer">故事来源：小学馆《日本大百科全书》 ↗</a>
+            </div>
+          </details>
+        </div>
+        <p class="opera-note-caveat">这些是传统戏文的故事梗概；不同版本的情节和人物称谓可能略有差异。</p>
+        <div class="opera-sources" aria-label="内容来源">
+          <span>内容来源</span>
+          <a href="https://www.zjskw.gov.cn/art/2023/10/25/art_1229711390_55099.html" target="_blank" rel="noopener noreferrer">浙江社科网：南戏故里在温州</a>
+          <a href="https://www.cp.com.cn/book/4acaa1b5-3.html" target="_blank" rel="noopener noreferrer">中国出版集团：《南戏原典〈张协状元〉研究》</a>
+          <a href="https://www.zgbk.com/ecph/words?ID=127546&amp;Preview=false&amp;SiteID=1&amp;Type=bkzyb" target="_blank" rel="noopener noreferrer">中国大百科全书：“荆刘拜杀”</a>
+        </div>
+      </div>
+    </details>
+  </section>
+</dialog>
+
+<aside id="editor" hidden aria-label="画面编辑面板">
+  <div class="editor-head"><h2>调整画面</h2><button id="editClose" aria-label="关闭编辑面板">关闭</button></div>
+  <p>修改即时预览；“保存到本机”只影响当前浏览器，不会更新 GitHub。</p>
+  <label>章节标题<input id="editTitle" type="text" maxlength="40"></label>
+  <label>导入文案<textarea id="editIntro" rows="3" maxlength="160"></textarea></label>
+  <label>暗场浓度 <output id="darkValue"></output><input id="dark" type="range" min=".3" max=".95" step=".01"></label>
+  <label>光圈大小 <output id="glowValue"></output><input id="glow" type="range" min="40" max="250" step="5"></label>
+  <label>开帘时间 <output id="durationValue"></output><input id="duration" type="range" min="1" max="6" step=".1"></label>
+  <label>薄雾浓度 <output id="mistValue"></output><input id="mist" type="range" min="0" max=".4" step=".01"></label>
+  <label>播放音量 <output id="volumeValue"></output><input id="volume" type="range" min="0" max="1" step=".05"></label>
+  <label>人物动作幅度 <output id="motionValue"></output><input id="motion" type="range" min="0" max="1" step=".05"></label>
+  <label>演出来源与署名<input id="editCredit" type="text" maxlength="180"></label>
+  <label>导入核对后的字幕（.vtt）<input id="subtitleFile" type="file" accept=".vtt,text/vtt"></label>
+  <p>字幕行可写“贫女：唱词”或“张协：唱词”，灯光会跟随标注的人物。未导入时不显示虚构唱词。</p>
+  <div class="edit-actions">
+    <button id="save">保存到本机</button>
+    <button id="export">导出设置</button>
+    <button id="defaults">恢复默认</button>
+  </div>
+  <p id="editStatus" role="status"></p>
+</aside>
+
+<audio id="audio" preload="metadata" src="https://zhouyungu1994-wq.github.io/ouyue-cloud-exhibition/assets/excerpt.mp3"></audio>
+<noscript>本页需要开启 JavaScript 才能体验开帘与音频交互。</noscript>
+<script src="../../journey-bridge.js"></script><script src="../../chapter-effects.js"></script>
+<script src="./config.js"></script>
+<script src="./app.js?v=20261005-center2"></script>
+</body>
+</html>

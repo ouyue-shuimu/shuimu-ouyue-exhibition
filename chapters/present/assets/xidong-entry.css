@@ -1,0 +1,9 @@
+.experience{height:100vh;height:100svh}
+.scroll-story,.scroll-cue{display:none!important}
+.flow-control small{font-size:.72rem;line-height:1.5;max-width:9em;text-align:center;color:#d7b98b}
+.progress-ring span{font-variant-numeric:tabular-nums}
+.image-lightbox{position:fixed;inset:0;max-width:min(92vw,1200px);max-height:92vh;padding:48px 14px 14px;border:1px solid #bda77f;background:#f4ecdd;color:#30483d}
+.image-lightbox::backdrop{background:#081211cc}
+.image-lightbox button{position:absolute;top:10px;right:14px;padding:6px 12px;border:1px solid #a48657;background:#30483d;color:#f5e9cf}
+.lightbox-image{display:block;max-width:100%;max-height:calc(92vh - 76px);object-fit:contain}
+@media(max-width:720px){.flow-control small{writing-mode:horizontal-tb;max-width:8em}}

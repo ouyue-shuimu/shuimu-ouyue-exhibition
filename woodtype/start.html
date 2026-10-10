@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#817566">
+  <title>水木成器 · 活字造句</title>
+  <style>
+    @font-face {
+      font-family: "Source Han Serif SC";
+      src: url("./assets/SourceHanSerifSC-Light.otf") format("opentype");
+      font-weight: 300;
+      font-display: swap;
+    }
+
+    :root {
+      color-scheme: light;
+      font-family: "Source Han Serif SC", "Noto Serif CJK SC", "Songti SC", serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { width: 100%; min-height: 100%; margin: 0; }
+
+    body {
+      overflow: hidden;
+      background: #817566;
+    }
+
+    .journey-back {position:absolute;left:1.4rem;top:1.2rem;z-index:5;color:#efe4ce;background:rgba(44,62,51,.75);border:1px solid rgba(239,228,206,.45);padding:.65rem .9rem;text-decoration:none;font-size:14px;letter-spacing:.12em;border-radius:2px;}
+    .journey-back:focus-visible{outline:2px solid #efe4ce;outline-offset:4px}
+    .scene {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      isolation: isolate;
+      overflow: hidden;
+    }
+
+    .scene-image {
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .boat-track {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      pointer-events: none;
+      animation: boat-arrive 12s cubic-bezier(.28, .38, .48, 1) .9s both;
+    }
+
+    .boat-bob {
+      width: 100%;
+      height: 100%;
+      animation: boat-bob 8s ease-in-out 12.9s infinite;
+    }
+
+    .boat-image {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      transform: scale(.72);
+      transform-origin: 52% 70%;
+      user-select: none;
+      -webkit-user-drag: none;
+    }
+
+    .water-sheen {
+      position: absolute;
+      z-index: 2;
+      left: 34%;
+      top: 43%;
+      width: 42%;
+      height: 53%;
+      overflow: hidden;
+      pointer-events: none;
+      opacity: .48;
+      mix-blend-mode: screen;
+      mask-image: linear-gradient(155deg, transparent 0%, #000 20%, #000 77%, transparent 100%);
+    }
+
+    .water-sheen::before {
+      content: "";
+      position: absolute;
+      inset: -30% -70%;
+      background: linear-gradient(118deg,
+        transparent 37%,
+        rgba(241, 220, 181, .025) 43%,
+        rgba(241, 220, 181, .16) 49%,
+        rgba(241, 220, 181, .035) 55%,
+        transparent 62%);
+      filter: blur(8px);
+      animation: water-glide 19s ease-in-out infinite alternate;
+    }
+
+    .cloud-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .motion-toggle {
+      position: absolute;
+      z-index: 4;
+      right: 1.4rem;
+      bottom: 1.2rem;
+      padding: .45rem .75rem;
+      border: 1px solid rgba(113, 91, 64, .38);
+      border-radius: 3px;
+      background: rgba(239, 223, 191, .86);
+      color: #494538;
+      font: 300 .8rem "Source Han Serif SC", serif;
+      letter-spacing: .1em;
+      cursor: pointer;
+    }
+
+    .motion-toggle:focus-visible { outline: 2px solid #494538; outline-offset: 3px; }
+    .scene[data-motion="paused"] .boat-track,
+    .scene[data-motion="paused"] .boat-bob,
+    .scene[data-motion="paused"] .water-sheen::before {
+      animation-play-state: paused;
+    }
+
+    .type-hotspot {
+      position: absolute;
+      z-index: 3;
+      left: 5.5%;
+      top: 31%;
+      width: 35%;
+      height: 51%;
+      border-radius: 42% 28% 32% 25%;
+      outline: none;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .type-hotspot::after {
+      content: "";
+      position: absolute;
+      inset: 9%;
+      border: 1px solid transparent;
+      border-radius: inherit;
+      transition: border-color .25s ease, box-shadow .25s ease;
+      pointer-events: none;
+    }
+
+    .type-hotspot:hover::after,
+    .type-hotspot:focus-visible::after {
+      border-color: rgba(246, 226, 183, .8);
+      box-shadow: 0 0 0 12px rgba(242, 221, 183, .12), inset 0 0 35px rgba(246, 226, 183, .13);
+    }
+
+    .guide {
+      position: absolute;
+      z-index: 4;
+      left: 7.1%;
+      top: 35.5%;
+      display: inline-flex;
+      align-items: center;
+      gap: .8em;
+      min-height: 3.25rem;
+      padding: .58rem .76rem .58rem 1.15rem;
+      color: #413c30;
+      text-decoration: none;
+      letter-spacing: .12em;
+      font-size: clamp(.82rem, 1.08vw, 1.08rem);
+      font-weight: 300;
+      white-space: nowrap;
+      background: rgba(239, 223, 191, .91);
+      border: 1px solid rgba(118, 89, 52, .43);
+      border-radius: 3px;
+      box-shadow: 0 8px 28px rgba(45, 42, 33, .19), inset 0 0 0 1px rgba(255, 248, 226, .46);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      cursor: pointer;
+      animation: guide-appear .9s ease 2.7s both;
+    }
+
+    .guide::after {
+      content: "";
+      position: absolute;
+      left: 25%;
+      top: calc(100% + 1px);
+      width: 1px;
+      height: clamp(35px, 6.5vh, 78px);
+      background: linear-gradient(rgba(236, 215, 177, .95), rgba(236, 215, 177, .1));
+      transform: rotate(-30deg);
+      transform-origin: top;
+      pointer-events: none;
+    }
+
+    .guide-label { line-height: 1.4; }
+
+    .guide-arrow {
+      display: grid;
+      width: 2rem;
+      height: 2rem;
+      place-items: center;
+      color: #eee0c2;
+      background: #5c6254;
+      border-radius: 50%;
+      font-family: Georgia, serif;
+      font-size: 1.3rem;
+      line-height: 1;
+      transition: transform .25s ease, background .25s ease;
+    }
+
+    .guide:hover .guide-arrow,
+    .guide:focus-visible .guide-arrow {
+      transform: translateX(3px);
+      background: #46574c;
+    }
+
+    .guide:focus-visible {
+      outline: 2px solid #fcf1d8;
+      outline-offset: 3px;
+    }
+
+    @keyframes guide-appear {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes boat-arrive {
+      from { transform: translate3d(0, 28%, 0); }
+      to { transform: translate3d(0, 1.4%, 0); }
+    }
+
+    @keyframes boat-bob {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-.45%); }
+    }
+
+    @keyframes water-glide {
+      from { transform: translate3d(-7%, 1%, 0) rotate(-4deg); }
+      to { transform: translate3d(8%, -1%, 0) rotate(-4deg); }
+    }
+
+    @media (max-aspect-ratio: 1/1) {
+      .scene-image { object-position: 19% center; }
+      .boat-image { object-position: 19% center; }
+      .water-sheen { left: 27%; width: 54%; opacity: .32; }
+
+      .type-hotspot {
+        inset: 0;
+        width: auto;
+        height: auto;
+        border-radius: 0;
+      }
+
+      .type-hotspot::after { display: none; }
+
+      .guide {
+        left: 50%;
+        top: auto;
+        bottom: max(7vh, env(safe-area-inset-bottom));
+        transform: translateX(-50%);
+        font-size: .95rem;
+        animation: guide-appear-mobile .9s ease 2.7s both;
+      }
+
+      .guide::after { display: none; }
+
+      @keyframes guide-appear-mobile {
+        from { opacity: 0; transform: translate(-50%, 12px); }
+        to { opacity: 1; transform: translate(-50%, 0); }
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .guide { animation: none; }
+      .guide-arrow { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <link rel="stylesheet" href="../journey-shared.css"><script src="../journey-bridge.js"></script>
+  <main class="scene" aria-label="水木成器场景：左侧是木活字印刷台，右上是廊桥，河道通向远方">
+    <a class="journey-back" href="../prologue.html">回望 · 瓯居海中</a>
+    <img class="scene-image" src="./assets/background-no-boat.png" alt="绢本设色山水画：河边的木活字印刷台、廊桥与木雕" draggable="false">
+    <div class="boat-track" aria-hidden="true">
+      <div class="boat-bob">
+        <img class="boat-image" src="./assets/boat-transparent.png" alt="" draggable="false">
+      </div>
+    </div>
+    <div class="water-sheen" aria-hidden="true"></div>
+    <canvas class="cloud-canvas" aria-hidden="true"></canvas>
+    <button class="motion-toggle" type="button" hidden>暂停动效</button>
+    <a class="type-hotspot" href="./intro.html" aria-label="点击左侧木活字，认识瑞安木活字的来历与工艺"></a>
+    <a class="guide" href="./intro.html" aria-label="点击左侧活字，认识技艺来历与工艺">
+      <span class="guide-label">点击左侧活字 · 先识来处</span>
+      <span class="guide-arrow" aria-hidden="true">›</span>
+    </a>
+  </main>
+  <script src="./scene-motion.js"></script>
+</body>
+</html>
