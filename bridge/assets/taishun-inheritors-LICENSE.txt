@@ -1,0 +1,19 @@
+Asset: taishun-inheritors-2021.jpg
+Extracted without alteration from the original PDF embedded image (431 x 654 pixels).
+
+Source: Huang Zi, "Recovery and Restoration of the Taishun Wooden Arch Bridges - Wenzhong Bridge, Xuezhai Bridge, and Wenxing Bridge", in ICOMOS-ICCROM Analysis of Case Studies in Recovery and Reconstruction, Volume 2: Case Studies (2021), printed page 47, figure 23 (PDF page 49).
+Source URL: https://www.iccrom.org/sites/default/files/publications/2021-03/vol2_icomos-iccrom_publication_2.pdf
+Copyright: ICCROM and ICOMOS, 2021.
+Licence: Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International.
+Licence URL: https://creativecommons.org/licenses/by-nc-sa/4.0/
+The publication's copyright page (PDF page 4) expressly applies this licence to the publication. No separate exclusion or photographer credit appears for figure 23.
+
+Subjects, top to bottom (Chinese names visible in the original figure):
+- Zeng Jiakai / 曾家快, Wenxing Bridge / 文兴桥
+- Lai Yongbin / 赖永斌, Wenzhong Bridge / 文重桥
+- Zheng Changgui / 郑昌贵, Xuezhai Bridge / 薛宅桥
+The English source caption misspells the last surname as "Zhe"; the website follows the visible Chinese label.
+
+Use on the non-commercial educational exhibition with source and licence links.
+This licence does not authorise commercial reuse. Keep attribution and the licence on redistributed copies; adaptations must use the same licence. This asset's licence does not relicense unrelated website content or code.
+No AI generation, retouching, upscaling, or compositing was applied.
