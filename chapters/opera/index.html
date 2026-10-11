@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>城中有声 · 水木之间</title>
-<link rel="stylesheet" href="./style.css?v=20261009-nanxi-notes3">
+<link rel="stylesheet" href="./style.css?v=20261011-layout-fix-v10">
 </head>
 <body>
 <header>
@@ -16,10 +16,11 @@
 <div class="stage-viewport" id="stageViewport">
   <div class="stage-box" id="stageBox">
     <section class="stage" id="stage" aria-label="互动戏台">
-      <img class="layer stage-bg" src="https://zhouyungu1994-wq.github.io/ouyue-cloud-exhibition/assets/stage.png" alt="朱红与青绿相映的传统戏台，两侧乐师伴奏，台下观众静候">
+      <img class="layer stage-bg" src="./assets/stage-with-actors-from-new-stage.png?v=20261011-layout-fix-v4" alt="瓯剧风格戏台与张协、贫女对戏场景" loading="eager">
+      <div class="stage-spotlight" aria-hidden="true"></div>
       <svg class="actor original-rig zhang" viewBox="0 0 1920 1080" role="img" aria-label="红袍张协，原画比例，头部与手臂轻摆">
         <defs>
-          <image id="zhang-original" href="https://zhouyungu1994-wq.github.io/ouyue-cloud-exhibition/assets/zhang.png" width="1920" height="1080"/>
+          <image id="zhang-original" href="./assets/zhang.png" width="1920" height="1080"/>
           <clipPath id="zhang-body-clip" clipPathUnits="userSpaceOnUse"><path clip-rule="evenodd" d="M0 0 H1920 V1080 H0 Z M780,465 L900,465 L900,528 L854,534 L821,534 L780,528 Z M871,536 L985,515 L985,654 L887,654 L869,585 Z"/></clipPath>
           <clipPath id="zhang-head-clip" clipPathUnits="userSpaceOnUse"><polygon points="780,465 900,465 900,528 854,537 821,537 780,528"/></clipPath>
           <clipPath id="zhang-arm-clip" clipPathUnits="userSpaceOnUse"><polygon points="867,534 985,515 985,654 884,654 865,585"/></clipPath>
@@ -30,7 +31,7 @@
       </svg>
       <svg class="actor original-rig pinnv" viewBox="0 0 1920 1080" role="img" aria-label="粉衣贫女，原画比例，头部与手臂轻摆">
         <defs>
-          <image id="pinnv-original" href="https://zhouyungu1994-wq.github.io/ouyue-cloud-exhibition/assets/pinnv.png" width="1920" height="1080"/>
+          <image id="pinnv-original" href="./assets/pinnv.png" width="1920" height="1080"/>
           <clipPath id="pinnv-body-clip" clipPathUnits="userSpaceOnUse"><path clip-rule="evenodd" d="M0 0 H1920 V1080 H0 Z M1097,493 L1160,493 L1160,537 L1139,551 L1110,550 L1097,539 Z M1010,527 L1070,527 L1105,558 L1103,586 L1077,617 L1077,663 L1008,663 Z"/></clipPath>
           <clipPath id="pinnv-head-clip" clipPathUnits="userSpaceOnUse"><polygon points="1097,493 1160,493 1160,537 1139,554 1110,553 1097,539"/></clipPath>
           <clipPath id="pinnv-arm-clip" clipPathUnits="userSpaceOnUse"><polygon points="1010,527 1070,527 1108,555 1106,588 1080,617 1080,663 1008,663"/></clipPath>
@@ -39,11 +40,22 @@
         <g class="rig-arm" style="--pivot:1103px 570px"><use href="#pinnv-original" clip-path="url(#pinnv-arm-clip)"/></g>
         <g class="rig-head" style="--pivot:1125px 549px"><use href="#pinnv-original" clip-path="url(#pinnv-head-clip)"/></g>
       </svg>
-      <img class="layer mist" src="https://zhouyungu1994-wq.github.io/ouyue-cloud-exhibition/assets/mist.png" alt="">
-      <div class="curtain-window"><img class="curtain left" src="https://zhouyungu1994-wq.github.io/ouyue-cloud-exhibition/assets/curtain-left.png" alt=""><img class="curtain right" src="https://zhouyungu1994-wq.github.io/ouyue-cloud-exhibition/assets/curtain-right.png" alt=""></div>
+      <img class="layer mist" src="./assets/mist.png" alt="">
+      <div class="curtain-window"><img class="curtain left" src="./assets/curtain-left.png" alt=""><img class="curtain right" src="./assets/curtain-right.png" alt=""></div>
       <button class="shade" id="reveal" aria-label="点击拉开帷幕，播放唱段"><span>循光而入 · 点击启幕</span></button>
+      <p class="stage-caption"><strong>温州东南剧院</strong><span>瓯剧《张协状元》等经典剧目的主要演出场地</span><small>本舞台为数字场景演绎，非剧院现场影像</small></p>
     </section>
   </div>
+
+  <aside class="character-guide" id="characterGuide" aria-label="人物线索" hidden>
+    <p class="character-guide-kicker">听戏看人 · 点击人物线索</p>
+    <div class="character-guide-choices">
+      <button type="button" class="character-choice" data-character="贫女" aria-pressed="false">贫女</button>
+      <button type="button" class="character-choice" data-character="张协" aria-pressed="false">张协</button>
+    </div>
+    <p class="character-guide-story" id="characterStory" aria-live="polite">选一位人物，看看这出戏如何写人情与世情。</p>
+    <a class="character-guide-source" href="https://www.neac.gov.cn/seac/xwzx/202601/1186679.shtml" target="_blank" rel="noopener noreferrer">剧情线索据剧目故事整理 · 非录音唱词 ↗</a>
+  </aside>
 
   <div class="intro-shade show" id="introShade" role="dialog" aria-modal="true" aria-labelledby="cardTitle" aria-describedby="cardText">
     <div class="intro-content">
@@ -52,12 +64,54 @@
       <h2 class="intro-title" id="cardTitle">城中有声</h2>
       <p class="intro-sub">一方戏台 · 一城烟火</p>
       <div class="intro-text" id="cardText">
-        <p>从《张协状元》中贫女对张协的责问，<br class="intro-break">走进瓯越戏曲里的市井生活。</p>
-        <p>听一段唱腔，听见台上台下共同关切的情义与是非。</p>
+        <p>从《张协状元》的故事出发，<br class="intro-break">听见温州城里的戏如何流传。</p>
+        <p>先听戏，再沿着戏文、旧物与当代舞台，走近南戏的来路。</p>
       </div>
       <button class="intro-skip" id="introSkip">入席听戏 <span aria-hidden="true">→</span></button>
-      <p class="intro-hint">入席后，点击帷幕听戏</p>
+      <p class="intro-hint">入席后，先看一页戏单，再走近戏中人</p>
     </div>
+  </div>
+
+  <div class="prologue-shade" id="prologueShade" hidden>
+    <section class="prologue-panel" role="dialog" aria-modal="true" aria-labelledby="prologueTitle">
+      <div class="prologue-topline"><span>入戏之前 · 本场戏单</span><span id="prologueStepLabel">前情三折</span></div>
+      <div class="prologue-step" id="storyStep">
+        <p class="prologue-kicker">灯影拓印 · 前情三折</p>
+        <div class="playbill-opening" aria-labelledby="prologueTitle">
+          <img class="playbill-art" src="./assets/prologue/playbill-scroll.png" alt="" aria-hidden="true">
+          <div class="bill-intro">
+            <span>《张协状元》 · 瓯剧选段</span>
+            <h2 id="prologueTitle">她为何要问责张协？</h2>
+            <p>戏单展开，三折前情依次显影。</p>
+          </div>
+          <div class="story-cards" aria-label="前情三折">
+            <article class="story-card"><div class="story-visual"><span aria-hidden="true">一</span><img src="./assets/prologue/01-rescue.png" alt="张协途中遇险，贫女伸手相救的情境插画"></div><div class="story-copy"><span>第一折 · 落难相救</span><p>张协赴考途中遇险，贫女出手相救，两人的命运由此相连。</p></div></article>
+            <article class="story-card"><div class="story-visual"><span aria-hidden="true">二</span><img src="./assets/prologue/02-marriage.png" alt="贫女与张协患难相依、结为夫妻的情境插画"></div><div class="story-copy"><span>第二折 · 结为夫妻</span><p>患难相依之中，两人结为夫妻；这段恩情成为重逢时无法回避的旧约。</p></div></article>
+            <article class="story-card"><div class="story-visual"><span aria-hidden="true">三</span><img src="./assets/prologue/03-reunion.png" alt="贫女与张协重逢问责的情境插画"></div><div class="story-copy"><span>第三折 · 重逢问责</span><p>多年后再次相遇，贫女追问旧情，唱段从此刻进入最尖锐的冲突。</p></div></article>
+          </div>
+        </div>
+        <div class="prologue-actions"><button id="skipStory">略过前情，看服饰</button><button class="prologue-primary" id="toCostumes">走近戏中人 <span aria-hidden="true">→</span></button><button class="prologue-quick" id="launchFromStory">略过服饰导览</button></div>
+      </div>
+      <div class="prologue-step" id="costumeStep" hidden>
+        <p class="prologue-kicker">看衣识人 · 点击人物</p>
+        <h2 id="costumeStepTitle" tabindex="-1">衣着，也在讲述命运</h2>
+        <p class="prologue-lead">选择一位人物，看看这版瓯剧如何用舞台服饰提示身份与处境。</p>
+        <div class="costume-choices" role="tablist" aria-label="选择人物服饰">
+          <button class="costume-person is-active" id="costumeZhang" role="tab" aria-selected="true" aria-controls="costumeDetail" data-costume="张协"><span class="costume-avatar zhang-avatar" aria-hidden="true"><img src="./assets/rig/zhang-head-v2-128.png" alt=""></span><span><b>张协</b><small>落魄书生 → 新科状元</small></span><span class="costume-arrow" aria-hidden="true">↗</span></button>
+          <button class="costume-person" id="costumePinnv" role="tab" aria-selected="false" aria-controls="costumeDetail" data-costume="贫女" tabindex="-1"><span class="costume-avatar pinnv-avatar" aria-hidden="true"><img src="./assets/rig/pinnv-head-v2-128.png" alt=""></span><span><b>贫女</b><small>朴素衣着 · 守信追问</small></span><span class="costume-arrow" aria-hidden="true">↗</span></button>
+        </div>
+        <article class="costume-detail" id="costumeDetail" role="tabpanel" aria-live="polite" aria-labelledby="costumeZhang">
+          <div class="costume-detail-index" id="costumeIndex">人物一 · 身份转折</div>
+          <h3 id="costumeTitle">从素衣书生到红袍状元</h3>
+          <div class="costume-phases" id="costumePhases" aria-label="服饰阶段"></div>
+          <p id="costumeCopy">选择服饰阶段，查看这版舞台造型如何提示张协的身份变化。</p>
+          <p class="costume-caveat" id="costumeCaveat">这是当代瓯剧演出的舞台造型解读，不是宋代服饰复原；不同演出版本的服装设计可能不同。</p>
+          <p class="costume-source">服饰解读依据：《第二节 瓯剧〈张协状元〉剧目服饰解读》。以下内容针对该演出版本的舞台造型；不同版本可能存在差异，亦非宋代服饰复原。</p>
+        </article>
+        <div class="listening-question"><span>带着问题听</span><p>贫女唱道：“诸多故事都可唱，为何独唱你张协状元？”当功名改变了张协的身份，他是否还记得贫女曾给他的情义？</p></div>
+        <div class="prologue-actions"><button id="backToStory">← 回看前情</button><button class="prologue-primary" id="launchPlay">完成导览 · 前往舞台 <span aria-hidden="true">→</span></button><button class="prologue-quick" id="launchFromCostume">返回舞台</button></div>
+      </div>
+    </section>
   </div>
 
   <div class="subtitles" id="subtitles" aria-label="同步字幕"><span id="speaker"></span><span id="line"></span></div>
@@ -68,6 +122,12 @@
     <button id="reset">合帘重看</button>
     <button id="skip">跳过唱段</button>
   </div>
+  <nav class="play-markers" id="playMarkers" aria-label="唱段关键节点" hidden>
+    <span>选段聆听</span>
+    <button type="button" data-seek="0"><i>01</i><b>贫女倾诉</b><small>开篇</small></button>
+    <button type="button" data-seek="72"><i>02</i><b>为何独唱你</b><small>01:12 · 情绪转折</small></button>
+    <button type="button" data-seek="95"><i>03</i><b>张协求饶</b><small>01:35 · 录音尾声</small></button>
+  </nav>
   <p class="status" id="status" role="status">移动鼠标，循光看戏；也可直接点击启幕。</p>
 </div>
 
@@ -77,87 +137,53 @@
     <h1 id="title">城中有声</h1>
     <p id="intro"></p>
   </div>
-  <section class="echo" id="echo" hidden tabindex="-1">
-    <p>余音入水</p>
-    <h2>戏起一方台，声入一座城。</h2>
-    <p>从一段唱腔，听见地方戏曲中的人情与世情。</p>
+  <section class="echo" id="echo" hidden tabindex="-1" aria-labelledby="echoTitle">
+    <p>余音入水 · 第一站</p>
+    <h2 id="echoTitle">戏起一方台，声入一座城。</h2>
+    <p>你听到的是温州市瓯剧艺术研究院（温州市瓯剧团）2021年创排的瓯剧版《张协状元》。古南戏故事在当代瓯剧舞台上重新开口；继续走读，看看一部旧戏如何留下新的回声。</p>
+    <a class="echo-continue" id="echoContinue" href="#archiveKnowledge">继续走读 <span aria-hidden="true">↓</span></a>
     <button id="replay">再听一遍</button>
-    <button id="openOperaNotes" hidden>再看南戏介绍</button>
   </section>
-  <footer>《水木之间·生生瓯越》数字云展 <span id="credit">唱段版本与来源待补充</span></footer>
-</main>
-
-<dialog class="opera-dialog" id="operaDialog" aria-labelledby="operaNotesTitle">
-  <div class="opera-dialog-head">
-    <p>唱毕入席 · 南戏手札</p>
-    <form method="dialog"><button aria-label="关闭南戏介绍">关闭</button></form>
-  </div>
-  <section class="opera-notes" aria-labelledby="operaNotesTitle">
-    <p class="opera-notes-kicker">听 · 见 · 留</p>
-    <h2 id="operaNotesTitle">听戏识南戏</h2>
-    <p class="opera-notes-lead">南戏又称“温州杂剧”“永嘉杂剧”，是宋元时期兴起于温州一带的戏曲形式。《张协状元》是现存最早、保存较完整的南戏剧本之一；贫女与张协的故事，让古老戏文里的情义与世态穿过时间，来到今天的戏台。</p>
-    <details class="opera-more">
-      <summary>继续读南戏 <span aria-hidden="true">＋</span></summary>
-      <div class="opera-more-content">
-        <p class="opera-more-intro">《张协状元》之外，以下四部作品合称“四大南戏”，也常简称“荆、刘、拜、杀”。</p>
-        <div class="opera-grid">
-          <details class="opera-card opera-card-featured">
-            <summary>
-              <span class="opera-card-label">重点读一出 · 温州故事</span>
-              <h3>《荆钗记》</h3>
-              <p class="opera-card-teaser">王十朋与钱玉莲以荆钗定情，因权势与误会几经离合。</p>
-              <span class="opera-card-action">展开故事 <span aria-hidden="true">＋</span></span>
-            </summary>
-            <div class="opera-card-detail">
-              <p>温州士子王十朋与钱玉莲以荆钗为信物订下婚约。王十朋赴试得中后拒绝权贵招赘，二人又因书信受阻、误会与权势阻挠而分离。经历曲折后，夫妻最终重逢。荆钗既是定情之物，也串起全剧对守信、情义与抗拒强权的书写。</p>
-              <a class="opera-card-source" href="https://www.mct.gov.cn/ggfw/zyjzzt/yanchu/yanchuwqhg/202407/t20240705_953897.html" target="_blank" rel="noopener noreferrer">故事与剧目介绍：文化和旅游部 ↗</a>
-            </div>
-          </details>
-          <details class="opera-card">
-            <summary>
-              <h3>《白兔记》</h3>
-              <p class="opera-card-teaser">刘知远、李三娘离散多年，白兔引出母子重逢。</p>
-              <span class="opera-card-action">展开故事 <span aria-hidden="true">＋</span></span>
-            </summary>
-            <div class="opera-card-detail">
-              <p>刘知远与李三娘成婚后，李家兄嫂嫌贫，对三娘百般欺凌。知远离家从军，三娘在磨房受苦并生下儿子咬脐郎。多年后，咬脐郎追逐白兔来到井边，与汲水的母亲相遇；白兔牵起寻亲线索，最终促成一家团圆。</p>
-              <a class="opera-card-source" href="https://openmuseum.tw/muse/digi_object/5ab29169cc0336867167cb8daf432422" target="_blank" rel="noopener noreferrer">故事来源：台湾音乐馆开放博物馆 ↗</a>
-            </div>
-          </details>
-          <details class="opera-card">
-            <summary>
-              <h3>《拜月亭》</h3>
-              <p class="opera-card-teaser">战乱中相遇的蒋世隆与王瑞兰，历经离合后团圆。</p>
-              <span class="opera-card-action">展开故事 <span aria-hidden="true">＋</span></span>
-            </summary>
-            <div class="opera-card-detail">
-              <p>战乱迫使王瑞兰与母亲逃难，也让书生蒋世隆和妹妹瑞莲失散。瑞兰与世隆途中相遇、患难相依并结为夫妻，却因门第之见遭父亲拆散。后来瑞兰在亭中拜月祈愿，亲人重逢、误会渐解，世隆与瑞兰终得团圆。</p>
-              <a class="opera-card-source" href="https://pedia.cloud.edu.tw/Entry/Detail/?search=%E6%8B%9C%E6%9C%88%E4%BA%AD&amp;title=%E6%8B%9C%E6%9C%88%E4%BA%AD" target="_blank" rel="noopener noreferrer">故事来源：台湾教育部教育百科 ↗</a>
-            </div>
-          </details>
-          <details class="opera-card">
-            <summary>
-              <h3>《杀狗记》</h3>
-              <p class="opera-card-teaser">杨氏设局劝夫，真假“尸体”照出朋友与手足的真心。</p>
-              <span class="opera-card-action">展开故事 <span aria-hidden="true">＋</span></span>
-            </summary>
-            <div class="opera-card-detail">
-              <p>孙华沉迷酒肉朋友，还把弟弟孙荣赶出家门。妻子杨氏杀死一只狗，将狗尸伪装成人形，试探孙华的朋友是否肯为他出力；朋友们纷纷推脱，弟弟孙荣却挺身相助。孙华由此看清谁值得信任，兄弟和好。故事借一场误会劝诫人珍惜手足、辨别虚情假意。</p>
-              <a class="opera-card-source" href="https://kotobank.jp/word/%E6%AE%BA%E7%8B%97%E8%A8%98-69166" target="_blank" rel="noopener noreferrer">故事来源：小学馆《日本大百科全书》 ↗</a>
-            </div>
-          </details>
-        </div>
-        <p class="opera-note-caveat">这些是传统戏文的故事梗概；不同版本的情节和人物称谓可能略有差异。</p>
-        <div class="opera-sources" aria-label="内容来源">
-          <span>内容来源</span>
-          <a href="https://www.zjskw.gov.cn/art/2023/10/25/art_1229711390_55099.html" target="_blank" rel="noopener noreferrer">浙江社科网：南戏故里在温州</a>
-          <a href="https://www.cp.com.cn/book/4acaa1b5-3.html" target="_blank" rel="noopener noreferrer">中国出版集团：《南戏原典〈张协状元〉研究》</a>
-          <a href="https://www.zgbk.com/ecph/words?ID=127546&amp;Preview=false&amp;SiteID=1&amp;Type=bkzyb" target="_blank" rel="noopener noreferrer">中国大百科全书：“荆刘拜杀”</a>
-        </div>
+  <section class="chapter-archive" id="operaNotes" hidden aria-labelledby="operaNotesTitle">
+    <section class="archive-page archive-knowledge" id="archiveKnowledge" aria-labelledby="operaNotesTitle">
+      <div class="archive-topline"><span>第二站 · 城中有声</span><span>一段戏文的来路</span></div>
+      <div class="archive-intro">
+      <div><p class="archive-kicker">听 · 见 · 留</p><h2 id="operaNotesTitle">南戏，怎样留在一座城里？</h2></div>
+      <p>南戏在宋元时期于温州一带兴起。它从书会编写、戏文传抄和舞台演出中生长；早期剧本、后世遗存与当代演出，共同呈现南戏延续至今的文化脉络。</p>
+    </div>
+      <div class="archive-path" role="tablist" aria-label="南戏知识导览">
+      <button class="archive-stop is-active" id="tab-origin" role="tab" aria-selected="true" aria-controls="panel-origin" data-panel="panel-origin"><span>01</span><b>温州起声</b><small>南戏与九山书会</small></button>
+      <button class="archive-stop" id="tab-script" role="tab" aria-selected="false" aria-controls="panel-script" data-panel="panel-script" tabindex="-1"><span>02</span><b>戏文留存</b><small>《张协状元》与旧物</small></button>
+      <button class="archive-stop" id="tab-today" role="tab" aria-selected="false" aria-controls="panel-today" data-panel="panel-today" tabindex="-1"><span>03</span><b>今日回响</b><small>南戏与瓯剧、永昆</small></button>
+    </div>
+      <div class="archive-panel is-active" id="panel-origin" role="tabpanel" aria-labelledby="tab-origin">
+      <div class="archive-index">01 <i>起声</i></div><div><h3>从温州的书会与市井而来</h3><p>南戏又称“温州杂剧”“永嘉杂剧”。浙江社科网转载的研究采访将其概括为北宋末至元末明初在南方兴起的戏曲形式；南宋温州九山书会是戏曲才人组成的创作组织，《张协状元》与之相关。此处展示的是文献所述的文化脉络，不对具体宋代演出场地作复原。</p><a class="archive-source" href="https://www.zjskw.gov.cn/art/2023/10/25/art_1229711390_55099.html" target="_blank" rel="noopener noreferrer">查看南戏与温州的资料 ↗</a><p class="archive-prompt">互动提示：点开下方剧目，看看这些故事如何把离散、守信、团圆与劝善带上舞台。</p></div>
+    </div>
+      <div class="archive-panel" id="panel-script" role="tabpanel" aria-labelledby="tab-script" hidden>
+      <div class="archive-index">02 <i>留存</i></div><div><h3>一部戏文，穿过了抄写与演出</h3><p>《永乐大典》本《张协状元》被研究者视为现存最早的南戏剧本。它的传承并非一座古戏台原封不动地留到今天，而是由文本、后世改编、演出和研究共同延续。</p><figure class="archive-evidence"><blockquote>《永乐大典》本<br>《张协状元》</blockquote><figcaption>文献线索示意排版 · 并非原件影印</figcaption></figure><a class="archive-source" href="https://www.cp.com.cn/book/4acaa1b5-3.html" target="_blank" rel="noopener noreferrer">查看商务印书馆的剧本研究介绍 ↗</a><p>温州博物馆还介绍过一件清代《张协状元》题材石雕构件。它是后世观看、表现这出戏的实物线索，年代为清代，不能当作宋代舞台遗迹。</p><a class="archive-source" href="https://www.wzmuseum.cn/Art/Art_18/Art_18_2344.aspx" target="_blank" rel="noopener noreferrer">查看温州博物馆藏品介绍 ↗</a></div>
+    </div>
+      <div class="archive-panel" id="panel-today" role="tabpanel" aria-labelledby="tab-today" hidden>
+      <div class="archive-index">03 <i>回响</i></div><div><h3>南戏是源流，瓯剧是后来的地方剧种</h3><p>南戏与瓯剧有关联，但不能直接画等号。瓯剧原名“温州乱弹”，形成于明末清初，1959年定名“瓯剧”，以多种声腔演唱；它吸收、改编南戏剧目，让古老戏文在新的剧种、舞台与观众中继续生活。</p><p>永嘉昆剧（永昆）也以当代演出重新排演《张协状元》。这段唱腔若来自现代演出，应以具体录音版本和演出团体标注；数字戏台插画则是本展的当代视觉表达。</p><a class="archive-source" href="https://wzszw.wenzhou.gov.cn/module/download/downfile.jsp?classid=0&amp;filename=d95bf62c9baf4442867a1ade4e326cf9.pdf" target="_blank" rel="noopener noreferrer">温州年鉴：瓯剧沿革 ↗</a><br><a class="archive-source" href="https://www.neac.gov.cn/seac/xwzx/202601/1186679.shtml" target="_blank" rel="noopener noreferrer">当代瓯剧《张协状元》演出介绍 ↗</a></div>
+    </div>
+      <p class="page-cue" id="archiveContinueCue">向下滚动 · 继续浏览 <span aria-hidden="true">↓</span></p>
+    </section>
+    <section class="archive-page archive-repertoire" id="archiveRepertoire" aria-labelledby="repertoireTitle">
+    <section class="repertoire" aria-labelledby="repertoireTitle">
+      <div class="repertoire-head"><div><p class="archive-kicker">第三站 · 戏中人</p><h3 id="repertoireTitle">从《张协状元》继续读</h3></div><p>四部戏文，四种人情。点开一出，看看戏里人怎样做选择。</p></div>
+      <div class="play-list">
+        <details class="play-entry"><summary><span class="play-number">A</span><span class="play-name">《荆钗记》</span><span class="play-hook">一支荆钗，见证守信与离合</span><span class="play-mark">＋</span></summary><div class="play-detail"><p>温州士子王十朋与钱玉莲以荆钗为信物订亲。故事围绕婚约、权势阻挠与误会展开，经历波折后夫妻重逢。荆钗既是信物，也是全剧故事推进的关键。</p><a href="https://www.zjskw.gov.cn/art/2023/10/25/art_1229711390_55099.html" target="_blank" rel="noopener noreferrer">浙江社科网：南戏经典剧目介绍 ↗</a></div></details>
+        <details class="play-entry"><summary><span class="play-number">B</span><span class="play-name">《白兔记》</span><span class="play-hook">白兔引路，母子多年后相逢</span><span class="play-mark">＋</span></summary><div class="play-detail"><p>刘知远与李三娘离散多年，儿子咬脐郎追逐白兔来到井边，与正在汲水的母亲相遇，白兔由此牵起寻亲团圆的故事。不同传本的情节和称谓可能有差异。</p><a href="https://openmuseum.tw/muse/digi_object/5ab29169cc0336867167cb8daf432422" target="_blank" rel="noopener noreferrer">台湾音乐馆开放博物馆：剧目故事 ↗</a></div></details>
+        <details class="play-entry"><summary><span class="play-number">C</span><span class="play-name">《拜月亭》</span><span class="play-hook">战乱相遇，离散中祈盼团圆</span><span class="play-mark">＋</span></summary><div class="play-detail"><p>蒋世隆与王瑞兰在战乱中相遇，患难相依，却又因门第和误会分离。拜月祈愿成为戏中情感的寄托，故事最终走向重逢。该剧也有《幽闺记》等异名。</p><a href="https://pedia.cloud.edu.tw/Entry/Detail/?search=%E6%8B%9C%E6%9C%88%E4%BA%AD&amp;title=%E6%8B%9C%E6%9C%88%E4%BA%AD" target="_blank" rel="noopener noreferrer">台湾教育部教育百科：剧目介绍 ↗</a></div></details>
+        <details class="play-entry"><summary><span class="play-number">D</span><span class="play-name">《杀狗记》</span><span class="play-hook">一场设局，辨出朋友与手足</span><span class="play-mark">＋</span></summary><div class="play-detail"><p>杨氏以假“尸体”设局劝诫沉迷酒友的丈夫孙华。朋友推托，弟弟孙荣前来相助，孙华因此看清情义、与弟弟和好。此处按传统故事梗概转述，版本可能有异。</p><a href="https://kotobank.jp/word/%E6%AE%BA%E7%8B%97%E8%A8%98-69166" target="_blank" rel="noopener noreferrer">小学馆《日本大百科全书》：剧目条目 ↗</a></div></details>
       </div>
-    </details>
+      <p class="repertoire-note">传统戏文在流传、改编与不同剧种演出中会出现异文；以上为便于入门的故事提要。</p>
+    </section>
+    <div class="archive-sources"><span>资料线索</span><a href="https://www.zjskw.gov.cn/art/2023/10/8/art_1229711390_54802.html" target="_blank" rel="noopener noreferrer">浙江社科网／新华网浙江：南戏的前世今生</a><a href="https://www.zjskw.gov.cn/art/2023/10/25/art_1229711390_55099.html" target="_blank" rel="noopener noreferrer">人民网／浙江社科网：南戏故里在温州</a><a href="https://www.wzmuseum.cn/Art/Art_18/Art_18_2344.aspx" target="_blank" rel="noopener noreferrer">温州博物馆：清代《张协状元》题材石雕</a></div>
+    <div class="archive-end"><span>余音未尽</span><button id="archiveReplay">回到戏台 · 再听一遍 ↑</button><a class="echo-continue" href="../../chapter.html?chapter=sea">循水向海 · 下一程 →</a></div>
+    <footer>《水木之间·生生瓯越》数字云展 <span id="credit">唱段版本与来源待补充</span></footer>
+    </section>
   </section>
-</dialog>
+</main>
 
 <aside id="editor" hidden aria-label="画面编辑面板">
   <div class="editor-head"><h2>调整画面</h2><button id="editClose" aria-label="关闭编辑面板">关闭</button></div>
@@ -181,10 +207,11 @@
   <p id="editStatus" role="status"></p>
 </aside>
 
-<audio id="audio" preload="metadata" src="https://zhouyungu1994-wq.github.io/ouyue-cloud-exhibition/assets/excerpt.mp3"></audio>
+<audio id="audio" preload="metadata" src="./assets/excerpt.mp3"></audio>
 <noscript>本页需要开启 JavaScript 才能体验开帘与音频交互。</noscript>
-<script src="../../journey-bridge.js"></script><script src="../../chapter-effects.js"></script>
+<script src="../../journey-bridge.js"></script>
+<script src="../../chapter-effects.js"></script>
 <script src="./config.js"></script>
-<script src="./app.js?v=20261005-center2"></script>
+<script src="./app.js?v=20261011-layout-fix-v7"></script>
 </body>
 </html>

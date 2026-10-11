@@ -1,9 +1,22 @@
 (() => {
   'use strict';
   const $ = id => document.getElementById(id);
-  const defaults = { title:'城中有声', intro:'隔一重帘，听一段人间。温州乱弹的声腔穿过街巷，落在寻常百姓的日子里。', dark:.85, glow:110, duration:2.8, mist:.15, volume:.75, motion:.5, credit:'唱段版本与来源待补充', cues:[] };
+  const playbillArt=document.querySelector('.playbill-art');
+  if(playbillArt){
+    const showArt=()=>playbillArt.parentElement.classList.add('has-art');
+    const hideArt=()=>playbillArt.classList.add('is-missing');
+    playbillArt.addEventListener('load',showArt);
+    playbillArt.addEventListener('error',hideArt);
+    if(playbillArt.complete)(playbillArt.naturalWidth?showArt:hideArt)();
+  }
+  document.querySelectorAll('.story-visual img').forEach(img=>{
+    const hide=()=>img.classList.add('is-missing');
+    img.addEventListener('error',hide);
+    if(img.complete&&!img.naturalWidth)hide();
+  });
+  const defaults = { title:'城中有声', intro:'隔一重帘，听一段唱腔；循着《张协状元》，走近温州南戏的文献与传承。', dark:.85, glow:110, duration:2.8, mist:.15, volume:.75, motion:.5, credit:'演出：温州市瓯剧艺术研究院（温州市瓯剧团）｜创排首演：2021年10月·温州东南剧院｜张协：方汝将；贫女：叶媛媛', cues:[] };
   const limits = {dark:[.3,.95],glow:[40,250],duration:[1,6],mist:[0,.4],volume:[0,1],motion:[0,1]};
-  const storageKey='ouyue-city-sound-v1';
+  const storageKey='ouyue-city-sound-v2';
   function normalize(value) {
     const c={...defaults};
     if(!value || typeof value!=='object') return c;
@@ -16,6 +29,22 @@
   let config={...initial}, opened=false, opening=false, timer=null, requestId=0;
   try {const saved=localStorage.getItem(storageKey);if(saved)config=normalize(JSON.parse(saved));}catch{}
   const audio=$('audio'),stage=$('stage'),viewport=$('stageViewport'),box=$('stageBox'),introShade=$('introShade'),introSkip=$('introSkip');
+  const stageImage=document.querySelector('.stage-bg');
+  if(stageImage){
+    const useFallback=()=>{
+      if(stageImage.dataset.fallback){stageImage.hidden=true;return;}
+      stageImage.dataset.fallback='true';
+      stage.classList.add('using-fallback');
+      stageImage.src='./assets/stage-clean-1920.png';
+    };
+    stageImage.addEventListener('error',useFallback);
+    if(stageImage.complete&&!stageImage.naturalWidth)useFallback();
+  }
+  const characterChoices=[...document.querySelectorAll('.character-choice')];
+  const characterStories={
+    '贫女':'张协赴考落难时，贫女救助他，并与他结为夫妻。张协得中后，她的遭遇与追问把“情义”推到戏的中心。',
+    '张协':'书生张协赴考途中受贫女相助。功名到来后，他如何对待旧日约定，成为这出戏最尖锐的冲突。'
+  };
   const STAGE_W=1920,STAGE_H=1080;
   const time=n=>Number.isFinite(n)?`${String(Math.floor(n/60)).padStart(2,'0')}:${String(Math.floor(n%60)).padStart(2,'0')}`:'--:--';
   const status=text=>$('status').textContent=text;
@@ -27,6 +56,7 @@
     if(syncFields){$('editTitle').value=config.title;$('editIntro').value=config.intro;$('editCredit').value=config.credit;}
     update();
   }
+  const playMarkers=[...document.querySelectorAll('#playMarkers [data-seek]')];
   function update(){
     const duration=audio.duration,valid=Number.isFinite(duration)&&duration>0;
     $('time').textContent=time(audio.currentTime)+' / '+time(duration);
@@ -38,19 +68,20 @@
     stage.classList.toggle('playing',opened&&!audio.paused&&!audio.ended&&!opening);
     const cue=opened&&!opening?config.cues.find(q=>audio.currentTime>=q.start&&audio.currentTime<q.end):null;
     $('speaker').textContent=cue?.speaker||'';$('line').textContent=cue?.text||'';stage.dataset.speaker=cue?.speaker||'';
+    playMarkers.forEach(button=>{const value=button.dataset.seek;const markerTime=value==='tail'&&valid?Math.max(72,duration-15):Number(value);button.classList.toggle('is-current',valid&&audio.currentTime>=markerTime&&(value==='tail'||audio.currentTime< (button.nextElementSibling?.dataset.seek==='tail'?Math.max(72,duration-15):Number(button.nextElementSibling?.dataset.seek??Infinity))));});
   }
   function fitStage(){
     if(!viewport||!box)return;
     const vw=viewport.clientWidth,vh=window.innerHeight;
     const portrait=vh>vw;
     viewport.classList.toggle('portrait',portrait);
-    const scale=portrait?vw/STAGE_W:Math.max(vw/STAGE_W,viewport.clientHeight/STAGE_H);
+    const scale=portrait?vw/STAGE_W:Math.min(vw/STAGE_W,viewport.clientHeight/STAGE_H);
     box.style.width=`${STAGE_W*scale}px`;
     box.style.height=`${STAGE_H*scale}px`;
     viewport.scrollLeft=0;viewport.scrollTop=0;
   }
   let introActive=!!introShade, introLeaving=false;
-  const introBackground=[...document.querySelectorAll('header, main, #editor, #stageBox, .transport, .subtitles, #status')];
+  const introBackground=[...document.querySelectorAll('header, main, #editor, #stageBox, #characterGuide, .transport, .subtitles, #status')];
   function endIntro(){
     if(!introActive||introLeaving)return;
     introLeaving=true;
@@ -61,7 +92,7 @@
       introBackground.forEach(el=>{el.inert=false;});
       document.body.classList.remove('intro-active');
       fitStage();
-      $('reveal').focus({preventScroll:true});
+      showPrologue();
     };
     setTimeout(complete,matchMedia('(prefers-reduced-motion: reduce)').matches?0:1600);
   }
@@ -76,31 +107,82 @@
       if(e.key==='Escape')endIntro();
     });
   }
+  function showPrologue(){
+    $('prologueShade').hidden=false;
+    $('prologueShade').classList.remove('is-closing');
+    $('storyStep').hidden=false;$('costumeStep').hidden=true;
+    $('prologueStepLabel').textContent='前情三折';
+    $('toCostumes').focus({preventScroll:true});
+  }
+  function showCostumes(){
+    $('storyStep').hidden=true;$('costumeStep').hidden=false;
+    $('prologueStepLabel').textContent='看衣识人';
+    selectCostume('张协');
+    $('costumeStepTitle').focus({preventScroll:true});
+  }
+  function leavePrologue(){
+    $('prologueShade').classList.add('is-closing');
+    setTimeout(()=>{$('prologueShade').hidden=true;$('prologueShade').classList.remove('is-closing');status('导览已结束。点击舞台中央，拉开帷幕并开始聆听。');$('reveal').focus({preventScroll:true});},matchMedia('(prefers-reduced-motion: reduce)').matches?0:800);
+  }
   async function playAudio(){
     const id=++requestId;
     try{await audio.play();if(id!==requestId)return;status('正在播放 · 你可以暂停、拖动进度，或跳过唱段。');}
     catch(error){if(id!==requestId||error.name==='AbortError')return;status(audio.error?'音频暂时无法读取，请检查 assets/excerpt.mp3。':'声音未能开始播放，请点击“继续听戏”。');}
     update();
   }
+  function selectCharacter(name=''){
+    if(name)stage.dataset.focus=name;else delete stage.dataset.focus;
+    characterChoices.forEach(button=>button.setAttribute('aria-pressed',String(button.dataset.character===name)));
+    $('characterStory').textContent=name?characterStories[name]:'选一位人物，看看这出戏如何写人情与世情。';
+  }
   function openCurtain(){
-    if(introActive||opened)return;
-    opened=true;opening=true;$('echo').hidden=true;stage.classList.remove('ended');stage.classList.add('opened');$('reveal').disabled=true;
+    if(introActive||opened||opening)return;
+    opened=true;opening=true;$('echo').hidden=true;stage.classList.remove('ended');stage.classList.add('opened');$('characterGuide').hidden=false;viewport.classList.add('has-opened');$('reveal').disabled=true;
+    $('playMarkers').hidden=false;
     status('帷幕渐启，请稍候。');update();
     timer=setTimeout(()=>{opening=false;timer=null;playAudio();},matchMedia('(prefers-reduced-motion: reduce)').matches?0:config.duration*1000);
   }
   function reset(){
-    requestId++;clearTimeout(timer);timer=null;audio.pause();audio.currentTime=0;opened=false;opening=false;stage.classList.remove('opened','playing','ended');$('reveal').disabled=false;$('echo').hidden=true;$('openOperaNotes').hidden=true;if($('operaDialog').open)$('operaDialog').close();status('移动鼠标，循光看戏；也可直接点击启幕。');update();
+    requestId++;clearTimeout(timer);timer=null;audio.pause();audio.currentTime=0;opened=false;opening=false;stage.classList.remove('opened','playing','ended');viewport.classList.remove('has-opened');selectCharacter();$('characterGuide').hidden=true;$('reveal').disabled=false;$('echo').hidden=true;$('operaNotes').hidden=true;$('playMarkers').hidden=true;activateTab(tabs[0]);showPrologue();status('前情戏单已展开，可以重新入戏。');update();
   }
   function finish(skipped=false){
-    requestId++;clearTimeout(timer);timer=null;opening=false;opened=true;audio.pause();stage.classList.add('opened','ended');$('reveal').disabled=true;$('echo').hidden=false;$('openOperaNotes').hidden=false;status(skipped?'已跳过唱段，可以随时再听一遍。':'唱段已结束，余音仍在。');update();$('speaker').textContent='';$('line').textContent='';stage.dataset.speaker='';
-    $('echo').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'center'});
-    if(!skipped&&!$('operaDialog').open)$('operaDialog').showModal();
+    requestId++;clearTimeout(timer);timer=null;opening=false;opened=true;audio.pause();stage.classList.add('opened','ended');$('reveal').disabled=true;$('playMarkers').hidden=true;$('echo').hidden=false;$('operaNotes').hidden=true;status(skipped?'唱段已跳过。':'唱段已结束，余音仍在。');update();$('speaker').textContent='';$('line').textContent='';stage.dataset.speaker='';
+    $('echo').classList.remove('is-arriving');void $('echo').offsetWidth;$('echo').classList.add('is-arriving');
+    $('echo').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});
   }
   $('reveal').onclick=openCurtain;
+  $('echoContinue').addEventListener('click',e=>{e.preventDefault();$('operaNotes').hidden=false;requestAnimationFrame(()=>{$('archiveKnowledge').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth',block:'start'});});});
+  const thirdStation=$('archiveRepertoire');
+  if('IntersectionObserver' in window){const stationObserver=new IntersectionObserver(entries=>{if(entries.some(entry=>entry.isIntersecting)){thirdStation.classList.add('is-entered');stationObserver.disconnect();}},{threshold:.16});stationObserver.observe(thirdStation);}else{thirdStation.classList.add('is-entered');}
+  $('toCostumes').onclick=showCostumes;$('skipStory').onclick=showCostumes;$('backToStory').onclick=()=>{ $('costumeStep').hidden=true;$('storyStep').hidden=false;$('prologueStepLabel').textContent='前情三折';$('toCostumes').focus(); };
+  $('launchPlay').onclick=leavePrologue;$('launchFromStory').onclick=leavePrologue;$('launchFromCostume').onclick=leavePrologue;
+  const costumeButtons=[...document.querySelectorAll('.costume-person')];
+  const costumeText={
+    '张协':{index:'人物一 · 身份转折',title:'张协：衣色随身份而变',phases:[
+      {label:'落魄书生',copy:'此阶段以素淡长衫、方巾与布鞋呈现赶考失意的书生形象。朴素衣着与后续红色官袍形成对照，提示人物身份的转变。'},
+      {label:'新科状元',copy:'高中之后，舞台造型转为醒目的红色官袍，并配以翅帽。红色与较正式的官服轮廓提示功名带来的身份跃升；这也使他与曾经救助自己的贫女形成强烈处境反差。'},
+      {label:'私欲官员',copy:'后续官员形象采用较深色调。与书生阶段的素色、状元阶段的红色相对照，服装色彩参与塑造人物身份变化。'}
+    ],caveat:'本段解读针对特定瓯剧演出版本的舞台造型，不作为宋代服饰复原；不同演出版本的服装设计可能存在差异。'},
+    '贫女':{index:'人物二 · 朴素与坚守',title:'贫女：朴素衣着中的辨识线索',phases:[
+      {label:'贫女造型',copy:'该版本中的贫女身着朴素的民间女性装束，可见粉色交领上衣、裙装、蓝色头巾及蓝白纹样。与张协后来的官服并置，形成身份与处境的视觉对照。'},
+      {label:'前后对照',copy:'现有剧情与服饰材料未明确记载贫女在“获救—成婚—重逢”之间的换装。对照前情插画与重逢唱段，可观察其朴素造型如何贯穿不同情境。'}
+    ],caveat:'服装细节依据该演出版本的服饰解读与影像；舞台造型不等同于宋代日常服饰。'}
+  };
+  function selectCostume(name){const d=costumeText[name];costumeButtons.forEach(button=>{const active=button.dataset.costume===name;button.classList.toggle('is-active',active);button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;});$('costumeDetail').setAttribute('aria-labelledby',name==='张协'?'costumeZhang':'costumePinnv');$('costumeIndex').textContent=d.index;$('costumeTitle').textContent=d.title;$('costumeCaveat').textContent=d.caveat;
+    const phaseBox=$('costumePhases');phaseBox.replaceChildren();
+    d.phases.forEach((phase,index)=>{const button=document.createElement('button');button.type='button';button.className='costume-phase';button.textContent=phase.label;button.setAttribute('aria-pressed',String(index===0));button.onclick=()=>{phaseBox.querySelectorAll('.costume-phase').forEach(item=>item.setAttribute('aria-pressed',String(item===button)));$('costumeCopy').textContent=phase.copy;};phaseBox.append(button);});
+    $('costumeCopy').textContent=d.phases[0].copy;
+  }
+  costumeButtons.forEach((button,index)=>{button.onclick=()=>selectCostume(button.dataset.costume);button.onkeydown=e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const next=e.key==='Home'?0:e.key==='End'?costumeButtons.length-1:(index+(e.key==='ArrowRight'?1:-1)+costumeButtons.length)%costumeButtons.length;costumeButtons[next].click();costumeButtons[next].focus();};});
+  playMarkers.forEach(button=>button.onclick=()=>{if(!opened||opening)return;let target=button.dataset.seek==='tail'?Math.max(72,(audio.duration||0)-15):Number(button.dataset.seek);if(!Number.isFinite(target)||!Number.isFinite(audio.duration)||audio.duration<=0)return;audio.currentTime=Math.min(target,Math.max(0,audio.duration-.25));stage.classList.remove('ended');$('echo').hidden=true;status(button.dataset.seek==='tail'?'已跳至录音尾段。该节点时间为便于浏览而设，建议结合完整唱段理解剧情。':'已跳转至所选唱段节点。');playAudio();update();});
   $('play').onclick=()=>{if(!opened){openCurtain();return;}if(opening)return;if(audio.paused){if(audio.ended)audio.currentTime=0;stage.classList.remove('ended');$('echo').hidden=true;playAudio();}else{requestId++;audio.pause();status('已暂停，点击继续听戏。');}};
   $('reset').onclick=reset;$('skip').onclick=()=>finish(true);
-  $('openOperaNotes').onclick=()=>{if(!$('operaDialog').open)$('operaDialog').showModal();};
-  $('replay').onclick=()=>{audio.currentTime=0;$('echo').hidden=true;stage.classList.remove('ended');stage.scrollIntoView({block:'center',behavior:'smooth'});playAudio();};
+  characterChoices.forEach(button=>button.onclick=()=>selectCharacter(stage.dataset.focus===button.dataset.character?'':button.dataset.character));
+  const tabs=[...document.querySelectorAll('.archive-stop')];
+  function activateTab(tab,focus=false){tabs.forEach(item=>{const active=item===tab;item.classList.toggle('is-active',active);item.setAttribute('aria-selected',String(active));item.tabIndex=active?0:-1;const panel=$(item.dataset.panel);panel.hidden=!active;panel.classList.toggle('is-active',active);});const showThirdStation=tab.dataset.panel==='panel-origin';thirdStation.hidden=!showThirdStation;$('archiveContinueCue').hidden=!showThirdStation;if(focus)tab.focus();}
+  tabs.forEach((tab,index)=>{tab.addEventListener('click',()=>activateTab(tab));tab.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(e.key))return;e.preventDefault();const forward=['ArrowRight','ArrowDown'].includes(e.key);const next=e.key==='Home'?0:e.key==='End'?tabs.length-1:(index+(forward?1:-1)+tabs.length)%tabs.length;activateTab(tabs[next],true);});});
+  $('archiveReplay').onclick=()=>{reset();stage.scrollIntoView({block:'center',behavior:'smooth'});};
+  $('replay').onclick=()=>{audio.currentTime=0;$('echo').hidden=true;stage.classList.remove('ended');$('playMarkers').hidden=false;stage.scrollIntoView({block:'center',behavior:'smooth'});playAudio();};
   $('mute').onclick=()=>{audio.muted=!audio.muted;update();};
   $('progress').oninput=()=>{if(Number.isFinite(audio.duration)&&audio.duration>0){audio.currentTime=Number($('progress').value)/100*audio.duration;stage.classList.remove('ended');$('echo').hidden=true;update();}};
   stage.onpointermove=e=>{if(opened)return;const r=stage.getBoundingClientRect();stage.style.setProperty('--x',((e.clientX-r.left)/r.width*100)+'%');stage.style.setProperty('--y',((e.clientY-r.top)/r.height*100)+'%');};
