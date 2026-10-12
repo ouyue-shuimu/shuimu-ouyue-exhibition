@@ -4,18 +4,19 @@
  let ctx,master,musicGain,brushGain,brushFilter,noise,started=false,muted=false,chapter='cover',lastBrush=0,brushLevel=0,hidden=false;
  const counters={},lastCue={},subscribers=new Set();
  try{muted=localStorage.getItem('shuimu.sound.muted')==='true';}catch{}
- const music=new Audio('assets/audio/journey-theme.mp3');music.preload='metadata';music.loop=true;
- let musicIssue=false,trying=false;
- function notify(){for(const fn of subscribers)fn({started,muted,chapter,musicIssue});}
+ const music=new Audio('assets/audio/journey-theme.mp3');music.preload='auto';music.loop=true;
+ let musicIssue=false,trying=false,autoplayBlocked=false;
+ function state(){return {started,muted,chapter,musicIssue,waitingForGesture:!muted&&(!started||autoplayBlocked||ctx?.state!=='running'),playing:!music.paused,currentTime:music.currentTime,context:ctx?.state,brushLevel,counters:{...counters}};}
+ function notify(){for(const fn of subscribers)fn(state());}
  function init(){
   if(ctx)return true;const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;
-  ctx=new AC();master=ctx.createGain();master.gain.value=muted?0:.6;master.connect(ctx.destination);
+  ctx=new AC();ctx.addEventListener?.('statechange',notify);master=ctx.createGain();master.gain.value=muted?0:.6;master.connect(ctx.destination);
   musicGain=ctx.createGain();musicGain.gain.value=0;ctx.createMediaElementSource(music).connect(musicGain).connect(master);
   noise=ctx.createBuffer(1,ctx.sampleRate*3,ctx.sampleRate);const d=noise.getChannelData(0);let low=0;for(let i=0;i<d.length;i++){low=(low+Math.random()*2-1)/1.04;d[i]=low*.15;}
   const s=ctx.createBufferSource();s.buffer=noise;s.loop=true;brushFilter=ctx.createBiquadFilter();brushFilter.type='bandpass';brushFilter.Q.value=.5;brushGain=ctx.createGain();brushGain.gain.value=0;s.connect(brushFilter).connect(brushGain).connect(master);s.start();return true;
  }
- function playMusic(){if(!started||muted||hidden||chapter==='opera'||trying||!music.paused)return;trying=true;music.play().then(()=>{trying=false;musicIssue=false;notify();}).catch(()=>{trying=false;musicIssue=true;notify();});}
- function start(){if(!init())return;started=true;ctx.resume().catch(()=>{});playMusic();notify();}
+ function playMusic(){if(!started||muted||hidden||chapter==='opera'||trying||!music.paused)return;trying=true;music.play().then(()=>{trying=false;musicIssue=false;autoplayBlocked=false;notify();}).catch(error=>{trying=false;if(error?.name==='NotAllowedError'){autoplayBlocked=true;musicIssue=false;}else{musicIssue=true;}notify();});}
+ function start(){if(muted||hidden||!init())return;started=true;ctx.resume().then(()=>{playMusic();notify();}).catch(()=>{autoplayBlocked=true;notify();});playMusic();notify();}
  function mute(value){muted=Boolean(value);try{localStorage.setItem('shuimu.sound.muted',String(muted));}catch{}if(ctx)master.gain.setTargetAtTime(muted?0:.6,ctx.currentTime,.035);if(muted){music.pause();stopBrush();}else start();notify();}
  function setChapter(value){chapter=value;stopBrush();if(chapter==='opera'){if(musicGain)musicGain.gain.value=0;music.pause();}else playMusic();notify();}
  function canSound(){return started&&!muted&&!hidden&&ctx&&ctx.state==='running';}
@@ -36,5 +37,5 @@
  setInterval(()=>{if(!ctx)return;if(performance.now()-lastBrush>110)stopBrush();const edge=Number.isFinite(music.duration)?Math.max(0,Math.min(1,music.currentTime/1.2,(music.duration-music.currentTime)/1.2)):1;const target=started&&!muted&&!hidden&&chapter!=='opera'?(chapter==='woodtype'?.13:.22)*edge:0;musicGain.gain.setTargetAtTime(target,ctx.currentTime,.3);},80);
  music.addEventListener('error',()=>{musicIssue=true;notify();});
  document.addEventListener('visibilitychange',()=>{hidden=document.hidden;if(hidden){music.pause();stopBrush();if(ctx)ctx.suspend().catch(()=>{});}else if(started&&!muted){ctx?.resume().catch(()=>{});playMusic();}});
- window.JourneySound={start,mute,toggle:()=>mute(!muted),setChapter,cue,brush,stopBrush,subscribe(fn){subscribers.add(fn);notify();return()=>subscribers.delete(fn);},state:()=>({started,muted,chapter,musicIssue,playing:!music.paused,currentTime:music.currentTime,context:ctx?.state,brushLevel,counters:{...counters}})};
+ window.JourneySound={start,mute,toggle:()=>mute(!muted),setChapter,cue,brush,stopBrush,subscribe(fn){subscribers.add(fn);notify();return()=>subscribers.delete(fn);},state};
 })();

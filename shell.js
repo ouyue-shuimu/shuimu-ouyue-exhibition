@@ -60,10 +60,16 @@
   gate();
  });
  next.addEventListener('click',()=>{if(current==='woodtype/index.html'){frame.contentDocument.getElementById('journeyContinue').click();return;}go(routes[current].next);});prev.addEventListener('click',()=>go(routes[current].previous));skip.addEventListener('click',()=>go(routes[current].skip));
- toggle.addEventListener('click',()=>{const s=sound.state();if(s.muted)sound.mute(false);else if(!s.started||s.musicIssue)sound.start();else sound.toggle();});
- sound.subscribe(s=>{toggle.textContent=s.muted?'声音已关':!s.started?'开启声音':s.musicIssue&&s.chapter!=='opera'?'重试配乐':'声音已开';toggle.setAttribute('aria-pressed',String(s.started&&!s.muted));toggle.title=s.musicIssue?'配乐暂未播放，点击重试':'配乐与互动音效开关';});
+ toggle.addEventListener('click',()=>{const s=sound.state();if(s.muted)sound.mute(false);else if(s.waitingForGesture||s.musicIssue)sound.start();else sound.toggle();});
+ sound.subscribe(s=>{toggle.textContent=s.muted?'声音已关':s.musicIssue&&s.chapter!=='opera'?'重试配乐':s.waitingForGesture?'配乐已启用':'声音已开';toggle.setAttribute('aria-pressed',String(!s.muted));toggle.title=s.waitingForGesture?'配乐默认开启，首次点击画面或入卷后播放':s.musicIssue?'配乐暂未播放，点击重试':'配乐与互动音效开关';});
+ function activateSound(event){if(event.target.closest?.('#soundToggle'))return;if(!sound.state().muted)sound.start();}
+ document.addEventListener('pointerdown',activateSound,{capture:true});
+ document.addEventListener('touchend',activateSound,{capture:true,passive:true});
+ document.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' ')activateSound(event);},{capture:true});
  window.JourneyHost={go,gate,enter,hasRoute};
  window.addEventListener('popstate',()=>go(safe(new URLSearchParams(location.search).get('page')),null));
  window.addEventListener('message',event=>{if(event.origin===location.origin&&event.data?.type==='shuimu:route')enter(event.data.route,event.source);});
  const initial=safe(new URLSearchParams(location.search).get('page'));pending=initial;update(initial,'replace');if(frame.getAttribute('src')!==initial)frame.contentWindow.location.replace(new URL(initial,location.href).href);
+ // Attempt immediately where permitted. Browsers that block autoplay unlock on the first real interaction.
+ if(!sound.state().muted)sound.start();
 })();

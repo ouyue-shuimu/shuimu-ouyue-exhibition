@@ -4,4 +4,27 @@
 @media(max-height:750px) and (min-width:800px){.prologue-copy{top:12%}.eyebrow{margin-bottom:12px}.source{margin-bottom:17px}.poem{font-size:17px;line-height:1.8}.poem p{margin-bottom:12px}.question{margin:14px 0}.prologue .enter{font-size:16px}}
 @media(max-aspect-ratio:1/1){.cover .artboard{left:117%;opacity:.72}.cover:after{content:'';position:absolute;inset:0;z-index:-1;background:linear-gradient(#386e5b1f,#2d65528c)}.mobile-title{display:flex;flex-direction:column;position:absolute;top:22%;left:8%;right:8%;text-align:center;font-size:clamp(40px,10vw,65px);line-height:1.5;letter-spacing:.1em;text-shadow:0 2px 12px #29554877}.mobile-title p{font-size:16px;letter-spacing:.08em;line-height:1.9}.invitation{top:auto;bottom:17%;left:50%;width:90%}.invitation p{font-size:16px;letter-spacing:.1em}.chapter-number{left:18px;bottom:21px;font-size:12px}.motion-control{right:16px;font-size:12px}.prologue .artboard{left:44%;opacity:.78}.prologue .mist{background:linear-gradient(90deg,#edf2edc7,#edf2ed7a 70%,#edf2ed4d)}.prologue-copy{left:8%;top:14%;width:84%;max-width:none}.prologue-copy h1{font-size:46px}.eyebrow{font-size:14px}.source{font-size:13px;margin-bottom:27px}.poem{font-size:18px}.question{font-size:18px;max-width:280px}.prologue .enter{font-size:17px}.prologue-route{top:79%;--dx:70px}.back-link{left:18px;top:18px}.cover-route{--dx:60px}}
 @media(prefers-reduced-motion:reduce){.boat,.boat-route,.mist,.reveal{animation:none}.transition-veil{transition:none}}
-@media(max-aspect-ratio:1/1){.cover .artboard{left:170%}.cover-route{left:20%}.prologue-route{left:48%}}
+/* Portrait cover: keep the complete horizontal painting visible, not a magnified crop. */
+@media(max-aspect-ratio:1/1){
+ .cover.scene{display:flex;flex-direction:column;justify-content:center;gap:clamp(16px,4dvh,30px);height:100dvh;min-height:0;padding:20px 0 64px;overflow-y:auto;background:linear-gradient(180deg,#609b8f,#507f73)}
+ .cover .artboard{position:relative;inset:auto;left:auto;top:auto;transform:none;width:100%;height:auto;aspect-ratio:1672/941;flex:none;z-index:0;opacity:1}
+ .cover .backdrop{height:auto;object-fit:contain}
+ .cover:after{display:none}
+ .cover .mobile-title{display:none}
+ .cover .invitation{position:relative;inset:auto;left:auto;top:auto;bottom:auto;transform:none;width:calc(100% - 32px);margin:0 auto;flex:none}
+ .cover .invitation p{font-size:clamp(14px,4vw,18px);line-height:1.6;letter-spacing:.08em;margin:0 0 14px}
+ .cover .enter{font-size:clamp(18px,5vw,23px);min-height:60px;padding:11px 28px;gap:9px}
+ .cover .hint{font-size:12px;line-height:1.5;margin-top:12px;letter-spacing:.06em}
+ .cover-route{left:29%;top:68%;--dx:25px;--dy:-3px}
+ .cover .motion-control{font-size:12px;min-height:38px;right:16px;bottom:12px;padding:8px 12px;z-index:2}
+ .prologue.scene{height:auto;min-height:100dvh;overflow:visible;padding:28px 0 64px}
+ .prologue .artboard{position:fixed;height:100dvh;min-width:177.6833dvh;left:44%;top:50dvh}
+ .prologue-copy{position:relative;left:auto;top:auto;width:calc(100% - 40px);margin:0 20px}
+ .prologue-copy h1{font-size:clamp(32px,10vw,46px);line-height:1.35}
+ .prologue .eyebrow{margin-bottom:12px}.prologue .source{margin:10px 0 18px}
+ .prologue .poem{font-size:16px;line-height:1.8}.prologue .poem p{margin-bottom:14px}
+ .prologue .question{font-size:16px;line-height:1.7;margin:16px 0;max-width:none}
+ .prologue .enter{font-size:16px;min-height:48px}
+ .prologue-route{left:48%}
+}
+@media(max-aspect-ratio:1/1) and (max-height:460px){.cover.scene{justify-content:flex-start;padding-top:12px;gap:14px}.cover .invitation p{margin-bottom:8px}.cover .enter{min-height:50px;padding:9px 22px}.cover .hint{margin-top:8px}.cover .motion-control{position:relative;align-self:flex-end;right:auto;bottom:auto;margin:0 16px 0 0}.cover.scene{padding-bottom:14px}}
