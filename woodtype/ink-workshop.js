@@ -3,6 +3,8 @@
 window.createInkWorkshop = function ({ getLetters, getAlignment, onChange }) {
   const $ = id => document.getElementById(id);
   const dialog = $('inkDialog'), canvas = $('inkCanvas'), ctx = canvas.getContext('2d');
+  const { width, height } = window.TypeLayout;
+  canvas.width = width; canvas.height = height;
   let tiles = [], activePointer = null, last = null, brush = null;
   let phase = "ink", resolvePaper = null;
   const cells = 6, cellCount = cells * cells;
@@ -18,7 +20,7 @@ window.createInkWorkshop = function ({ getLetters, getAlignment, onChange }) {
     $('inkProgressText').textContent = `${phase === 'paper' ? '刷印' : '上墨'} ${amount}%`;
     $('finishInkBtn').disabled = !complete;
     $('finishInkBtn').textContent = phase === 'paper' ? '揭纸看印页 →' : '完成上墨 →';
-    $('inkTitle').textContent = phase === 'paper' ? '覆纸 · 元宝形棕刷' : '上墨 · 墨刷（下刷）';
+    $('inkTitle').textContent = phase === 'paper' ? '覆纸 · 棕刷' : '上墨 · 墨刷';
     $('resetInkBtn').textContent = phase === 'paper' ? '重新刷印' : '重新上墨';
     $('inkInstruction').textContent = phase === 'paper'
       ? (complete ? '纸背已刷匀，可以揭纸查看印迹。' : '宣纸已覆在字版上。按住棕刷，均匀刷过纸背，再揭纸看印迹。')
@@ -33,11 +35,12 @@ window.createInkWorkshop = function ({ getLetters, getAlignment, onChange }) {
   }
 
   function draw() {
-    ctx.clearRect(0, 0, 1000, 380);
-    const wood = ctx.createLinearGradient(0, 0, 1000, 380);
+    ctx.clearRect(0, 0, width, height);
+    const wood = ctx.createLinearGradient(0, 0, width, height);
     wood.addColorStop(0, '#69472f'); wood.addColorStop(1, '#422e22');
-    ctx.fillStyle = wood; ctx.fillRect(0, 0, 1000, 380);
-    ctx.strokeStyle = '#9d7550'; ctx.lineWidth = 2; ctx.strokeRect(10, 10, 980, 360);
+    ctx.fillStyle = wood; ctx.fillRect(0, 0, width, height);
+    ctx.strokeStyle = '#9d7550'; ctx.lineWidth = 2; ctx.strokeRect(10, 10, width - 20, height - 20);
+    window.TypeLayout.paintPlateFrame(ctx);
     for (const tile of tiles) {
       const { x, y, size } = tile;
       ctx.fillStyle = '#281e17'; ctx.fillRect(x + 4, y + 6, size, size);
@@ -59,8 +62,9 @@ window.createInkWorkshop = function ({ getLetters, getAlignment, onChange }) {
       ctx.fillStyle = '#151d18'; ctx.shadowColor = '#10190f88'; ctx.shadowBlur = 1.5; window.TypeLayout.paintGlyph(ctx,tile.char,0,-4); ctx.restore();
     }
     if (phase === 'paper') {
-      ctx.fillStyle = '#f1e6cf'; ctx.fillRect(25, 22, 950, 336);
-      ctx.strokeStyle = '#d6c4a2'; ctx.lineWidth = 1; ctx.strokeRect(25, 22, 950, 336);
+      ctx.save(); ctx.beginPath(); ctx.rect(25, 22, width - 50, height - 44); ctx.clip();
+      window.PrintPaper.paint(ctx, { frame: false, caption: false }); ctx.restore();
+      ctx.strokeStyle = '#d6c4a2'; ctx.lineWidth = 1; ctx.strokeRect(25, 22, width - 50, height - 44);
       for (const tile of tiles) tile.paperCells.forEach((done, i) => {
         if (!done) return;
         const step = tile.size / cells;
@@ -144,7 +148,7 @@ window.createInkWorkshop = function ({ getLetters, getAlignment, onChange }) {
     for (let i = 1; i <= steps; i++) stamp({ x: from.x + (to.x - from.x) * i / steps, y: from.y + (to.y - from.y) * i / steps });
     draw(); report();
   }
-  function point(event) { const rect = canvas.getBoundingClientRect(); return { x: (event.clientX - rect.left) * 1000 / rect.width, y: (event.clientY - rect.top) * 380 / rect.height }; }
+  function point(event) { const rect = canvas.getBoundingClientRect(); return { x: (event.clientX - rect.left) * width / rect.width, y: (event.clientY - rect.top) * height / rect.height }; }
   canvas.addEventListener('pointerdown', event => {
     if (activePointer !== null) return;
     event.preventDefault(); activePointer = event.pointerId; canvas.setPointerCapture(event.pointerId);
@@ -160,7 +164,7 @@ window.createInkWorkshop = function ({ getLetters, getAlignment, onChange }) {
   function stop() { activePointer = null; last = null; window.JourneySfx?.stopBrush(); report(); }
   dialog.addEventListener('close', () => { stop(); if(resolvePaper){const resolve=resolvePaper;resolvePaper=null;resolve(false);} });
   $('closeInkBtn').addEventListener('click', () => dialog.close());
-  $('resetInkBtn').addEventListener('click', () => { stop(); if(phase==='paper')tiles.forEach(tile=>tile.paperCells.fill(false));else buildTiles(); brush = { x: 500, y: 330 }; draw(); report(); });
+  $('resetInkBtn').addEventListener('click', () => { stop(); if(phase==='paper')tiles.forEach(tile=>tile.paperCells.fill(false));else buildTiles(); brush = { x: width / 2, y: height - 70 }; draw(); report(); });
   $('finishInkBtn').addEventListener('click', () => {
     if ($('finishInkBtn').disabled) return;
     if (phase === 'paper' && resolvePaper) { window.JourneySfx?.cue('reveal');const resolve=resolvePaper;resolvePaper=null;resolve(true); }
@@ -170,7 +174,7 @@ window.createInkWorkshop = function ({ getLetters, getAlignment, onChange }) {
     if (!getLetters().length) return;
     phase = 'ink';
     if (!tiles.length) buildTiles();
-    dialog.showModal(); brush = { x: 500, y: 330 }; draw(); report();
+    dialog.showModal(); brush = { x: width / 2, y: height - 70 }; draw(); report();
     try { await document.fonts.load('400 80px "I.Ming"'); } catch (_) {}
     if (dialog.open) draw();
   }
@@ -178,16 +182,17 @@ window.createInkWorkshop = function ({ getLetters, getAlignment, onChange }) {
     if (!ready()) return Promise.resolve(false);
     window.JourneySfx?.cue('paper');
     phase='paper';tiles.forEach(tile=>tile.paperCells.fill(false));
-    return new Promise(resolve=>{resolvePaper=resolve;dialog.showModal();brush={x:500,y:320};draw();report();});
+    return new Promise(resolve=>{resolvePaper=resolve;dialog.showModal();brush={x:width/2,y:height-70};draw();report();});
   }
   function reset() { stop(); tiles = []; brush = null; if (dialog.open) dialog.close(); report(); }
 
   function random(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
   async function impression(phrase) {
     try { await document.fonts.load('400 80px "I.Ming"'); } catch (_) {}
-    const chars = Array.from(phrase), result = document.createElement('canvas'); result.width = 1400; result.height = 532;
+    const chars = Array.from(phrase), result = document.createElement('canvas'); result.width = width * 2; result.height = height * 2;
     const out = result.getContext('2d'), layout = window.TypeLayout.reflected(chars, getAlignment());
-    out.scale(1.4, 1.4);
+    out.scale(2, 2);
+    window.PrintPaper.paint(out);
     const inkAmounts = tiles.map(coverage);
     const seed = chars.reduce((n, ch) => Math.imul(n, 31) + ch.codePointAt(0) | 0, 7281), rng = random(seed);
     chars.forEach((char, index) => {
@@ -198,19 +203,35 @@ window.createInkWorkshop = function ({ getLetters, getAlignment, onChange }) {
       window.TypeLayout.paintGlyph(g,char,59,55);
       g.globalCompositeOperation = 'destination-in';
       const density = g.createLinearGradient(15, 12, 105, 110);
-      density.addColorStop(0, `rgba(0,0,0,${.78 + rng() * .15})`); density.addColorStop(.48, 'rgba(0,0,0,1)'); density.addColorStop(1, `rgba(0,0,0,${.8 + rng() * .14})`);
+      density.addColorStop(0, `rgba(0,0,0,${.68 + rng() * .18})`); density.addColorStop(.48, 'rgba(0,0,0,1)'); density.addColorStop(1, `rgba(0,0,0,${.72 + rng() * .18})`);
       g.fillStyle = density; g.fillRect(0, 0, 118, 118);
       g.globalCompositeOperation = 'destination-out';
       // Ink breaks stay inside the strokes: the paper itself remains clean.
-      for (let n = 0; n < 65; n++) {
-        g.fillStyle = `rgba(0,0,0,${.2 + rng() * .6})`; g.beginPath();
-        g.ellipse(15 + rng() * 90, 12 + rng() * 95, .35 + rng() * 1.05, .2 + rng() * .65, rng() * Math.PI, 0, Math.PI * 2); g.fill();
+      // Bias pinholes towards actual strokes so they remain visible at normal viewing size.
+      const solid = g.getImageData(0, 0, 118, 118).data;
+      let breaks = 0;
+      for (let n = 0; n < 1600 && breaks < 80; n++) {
+        const x = Math.floor(15 + rng() * 90), y = Math.floor(12 + rng() * 95);
+        if (solid[(y * 118 + x) * 4 + 3] < 110) continue;
+        g.fillStyle = `rgba(0,0,0,${.45 + rng() * .5})`; g.beginPath();
+        g.ellipse(x, y, .6 + rng() * 1.5, .3 + rng() * .8, rng() * Math.PI, 0, Math.PI * 2); g.fill(); breaks++;
       }
-      for (let n = 0; n < 9; n++) {
+      for (let n = 0; n < 14; n++) {
         const x = 15 + rng() * 90, y = 12 + rng() * 95;
-        g.strokeStyle = 'rgba(0,0,0,.35)'; g.lineWidth = .35 + rng() * .55;
+        g.strokeStyle = 'rgba(0,0,0,.48)'; g.lineWidth = .45 + rng() * .65;
         g.beginPath(); g.moveTo(x, y); g.lineTo(x + 3 + rng() * 7, y + rng() * 2); g.stroke();
       }
+      // Local ink and rubbing coverage mirror with the physical plate, never reorder characters.
+      const pixels = g.getImageData(0, 0, 118, 118), step = 118 / cells;
+      for (let y = 0; y < 118; y++) for (let x = 0; x < 118; x++) {
+        const i = (y * 118 + x) * 4 + 3;
+        if (!pixels.data[i]) continue;
+        const cell = Math.floor(y / step) * cells + cells - 1 - Math.floor(x / step);
+        const localInk = tiles[index]?.cells[cell] ? 1 : .76;
+        const localPressure = tiles[index]?.paperCells[cell] ? 1 : .85;
+        pixels.data[i] *= localInk * localPressure * (.84 + rng() * .16);
+      }
+      g.putImageData(pixels, 0, 0);
       const tile = layout[index];
       out.save();
       out.globalAlpha = .83 + (inkAmounts[index] || .85) * .17;
@@ -222,10 +243,11 @@ window.createInkWorkshop = function ({ getLetters, getAlignment, onChange }) {
     return result;
   }
   function preview(target) {
-    target.width = 1000; target.height = 380;
+    target.width = width * 2; target.height = height * 2;
     const context = target.getContext('2d');
+    context.scale(2, 2); window.PrintPaper.paint(context);
     context.font = '400 80px "I.Ming", serif';
-    context.textAlign = 'center'; context.textBaseline = 'middle'; context.fillStyle = '#30372c';
+    context.textAlign = 'center'; context.textBaseline = 'middle'; context.fillStyle = 'rgba(48,55,44,.25)';
     for (const tile of window.TypeLayout.reflected(getLetters(), getAlignment())) {
       window.TypeLayout.paintGlyph(context,tile.char,tile.x+tile.size/2,tile.y+tile.size/2-4);
     }

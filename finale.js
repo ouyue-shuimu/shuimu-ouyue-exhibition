@@ -7,12 +7,19 @@
  const marks=[];if(phrase)marks.push('木字\n留言');if(visitedOpera)marks.push('戏中\n相逢');
  for(const text of marks){const stamp=document.createElement('span');stamp.className='mark';stamp.textContent=text;document.getElementById('marks').append(stamp);}
  save.disabled=!phrase;if(!phrase){document.getElementById('afterword').textContent='回到木活字页，刷印并确认你的原句。';document.getElementById('returnType').textContent='去造一句自己的话';}
- const bg=new Image();bg.src='assets/finale-clean.png';
+ const bg=new Image();bg.src='assets/finale-textfixed.png';
+ const clean=new Image();clean.src='assets/finale-clean.png';
  save.addEventListener('click',async()=>{
   if(!phrase)return;save.disabled=true;status.textContent='正在收下这一笔…';
   try{
-   await bg.decode();await document.fonts.load('300 42px JourneySerif');
+   await Promise.all([bg.decode(),clean.decode()]);await document.fonts.load('300 42px JourneySerif');
    const c=document.createElement('canvas');c.width=1672;c.height=941;const ctx=c.getContext('2d');ctx.drawImage(bg,0,0,1672,941);
+   // Match the on-page clear layers, preserving the corrected text everywhere else.
+   ctx.drawImage(clean,1034,422,322,292,1034,422,322,292);
+   const water=document.createElement('canvas');water.width=264;water.height=140;const waterCtx=water.getContext('2d');
+   waterCtx.drawImage(clean,1390,716,264,140,0,0,264,140);waterCtx.globalCompositeOperation='destination-in';
+   for(const [x,y] of [[264,0],[0,140]]){const gradient=waterCtx.createLinearGradient(0,0,x,y),edge=x?.06:.11;gradient.addColorStop(0,'transparent');gradient.addColorStop(edge,'#000');gradient.addColorStop(1-edge,'#000');gradient.addColorStop(1,'transparent');waterCtx.fillStyle=gradient;waterCtx.fillRect(0,0,264,140);}
+   ctx.drawImage(water,1390,716);
    ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillStyle='#725876';
    const chars=Array.from(phrase),lines=[];for(let i=0;i<chars.length;i+=6)lines.push(chars.slice(i,i+6).join(''));
    ctx.font='300 50px JourneySerif, serif';lines.forEach((line,i)=>ctx.fillText(line,1210,460+i*68));

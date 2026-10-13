@@ -6,8 +6,9 @@ window.TypeLayout = {
     ctx.save();ctx.translate(x,y);ctx.scale(1.08,.94);
     ctx.font='400 80px "I.Ming", serif';ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText(char,0,0);
-    // A tiny horizontal spread strengthens vertical cuts without equally thickening horizontals.
-    ctx.fillText(char,-.28,0);ctx.fillText(char,.28,0);
+    // Strengthen upright cuts while preserving the old-Song thin horizontal strokes and counters.
+    // This is a digital treatment of I.Ming, not a reproduction of a historical Ruian type block.
+    ctx.fillText(char,-.78,0);ctx.fillText(char,.78,0);
     ctx.restore();
   },
   drawFace(canvas, char, mirror = true) {
@@ -17,23 +18,31 @@ window.TypeLayout = {
     ctx.font = '400 80px "I.Ming", serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillStyle = '#24231c'; this.paintGlyph(ctx,char,59,55);
   },
-  forPrinting(letters) {
-    const result = [];
-    for (let i = 0; i < letters.length; i += 6) result.push(...letters.slice(i, i + 6).reverse());
-    return result;
+  paintPlateFrame(ctx) {
+    ctx.save(); ctx.strokeStyle = '#bf9265'; ctx.lineWidth = 7;
+    ctx.strokeRect(40, 82, 560, 642); ctx.lineWidth = 1.5; ctx.strokeRect(54, 96, 532, 614);
+    ctx.lineWidth = .9;
+    for (const x of [232, 408]) { ctx.beginPath(); ctx.moveTo(x, 97); ctx.lineTo(x, 709); ctx.stroke(); }
+    ctx.restore();
   },
-  reading(letters) { return this.forPrinting(letters).join(''); },
-  width: 1000, height: 380, size: 118, gap: 18, columns: 6,
+  drawPlateFrame(canvas) {
+    canvas.width = this.width * 2; canvas.height = this.height * 2;
+    const ctx = canvas.getContext('2d'); ctx.scale(2, 2); this.paintPlateFrame(ctx);
+  },
+  forPrinting(letters) {
+    // Data stays in reading order. Only the physical coordinates and glyph faces mirror.
+    return [...letters];
+  },
+  reading(letters) { return letters.join(''); },
+  width: 640, height: 820, size: 118, rows: 4, columns: 3,
   positions(letters, alignment = 'left') {
-    const { width, height, size, gap, columns } = this;
-    const rows = Math.ceil(letters.length / columns);
-    const margin = (width - columns * size - (columns - 1) * gap) / 2;
+    const { size, rows } = this;
     return letters.map((char, index) => {
-      const row = Math.floor(index / columns), col = index % columns;
-      const count = Math.min(columns, letters.length - row * columns);
-      const rowWidth = count * size + (count - 1) * gap;
-      const start = alignment === 'center' ? (width - rowWidth) / 2 : alignment === 'right' ? width - margin - rowWidth : margin;
-      return { char, index, size, x: start + col * (size + gap), y: (height - rows * size - (rows - 1) * gap) / 2 + row * (size + gap) };
+      const col = Math.floor(index / rows), row = index % rows;
+      const count = Math.min(rows, letters.length - col * rows);
+      const offset = alignment === 'center' ? (rows - count) * 75 : alignment === 'right' ? (rows - count) * 150 : 0;
+      // Plate columns run left-to-right; the reflected printed page runs right-to-left.
+      return { char, index, size, x: 85 + col * 176, y: 126 + row * 150 + offset };
     });
   },
   reflected(letters, alignment = 'left') {
