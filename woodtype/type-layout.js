@@ -4,7 +4,7 @@ window.TypeLayout = {
   // Display treatment only; the licensed font file remains unchanged.
   paintGlyph(ctx, char, x, y) {
     ctx.save();ctx.translate(x,y);ctx.scale(1.08,.94);
-    ctx.font='400 80px "I.Ming", serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.font='400 80px "Shuimu Old Song", serif';ctx.textAlign='center';ctx.textBaseline='middle';
     ctx.fillText(char,0,0);
     // Strengthen upright cuts while preserving the old-Song thin horizontal strokes and counters.
     // This is a digital treatment of I.Ming, not a reproduction of a historical Ruian type block.
@@ -15,7 +15,7 @@ window.TypeLayout = {
     canvas.width = 118; canvas.height = 118;
     const ctx = canvas.getContext('2d');
     if (mirror) { ctx.translate(118, 0); ctx.scale(-1, 1); }
-    ctx.font = '400 80px "I.Ming", serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.font = '400 80px "Shuimu Old Song", serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillStyle = '#24231c'; this.paintGlyph(ctx,char,59,55);
   },
   paintPlateFrame(ctx) {

@@ -53,12 +53,12 @@ window.createInkWorkshop = function ({ getLetters, getAlignment, onChange }) {
       tile.cells.forEach((inked, i) => { if (inked) ctx.fillRect(x + i % cells * step, y + Math.floor(i / cells) * step, step, step); });
       ctx.save(); ctx.translate(x + size / 2, y + size / 2); ctx.scale(-1, 1);
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.font = '400 80px "I.Ming", serif'; ctx.fillStyle = '#735334'; window.TypeLayout.paintGlyph(ctx,tile.char,0,-4);
+      ctx.font = '400 80px "Shuimu Old Song", serif'; ctx.fillStyle = '#735334'; window.TypeLayout.paintGlyph(ctx,tile.char,0,-4);
       ctx.restore();
       ctx.save(); ctx.beginPath();
       tile.cells.forEach((inked, i) => { if (inked) ctx.rect(x + i % cells * step, y + Math.floor(i / cells) * step, step + .5, step + .5); });
       ctx.clip(); ctx.translate(x + size / 2, y + size / 2); ctx.scale(-1, 1);
-      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '400 80px "I.Ming", serif';
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.font = '400 80px "Shuimu Old Song", serif';
       ctx.fillStyle = '#151d18'; ctx.shadowColor = '#10190f88'; ctx.shadowBlur = 1.5; window.TypeLayout.paintGlyph(ctx,tile.char,0,-4); ctx.restore();
     }
     if (phase === 'paper') {
@@ -175,7 +175,7 @@ window.createInkWorkshop = function ({ getLetters, getAlignment, onChange }) {
     phase = 'ink';
     if (!tiles.length) buildTiles();
     dialog.showModal(); brush = { x: width / 2, y: height - 70 }; draw(); report();
-    try { await document.fonts.load('400 80px "I.Ming"'); } catch (_) {}
+    try { await document.fonts.load('400 80px "Shuimu Old Song"',getLetters().join("")); } catch (_) {}
     if (dialog.open) draw();
   }
   function coverAndPrint() {
@@ -188,7 +188,7 @@ window.createInkWorkshop = function ({ getLetters, getAlignment, onChange }) {
 
   function random(seed) { return () => { seed |= 0; seed = seed + 0x6D2B79F5 | 0; let t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
   async function impression(phrase) {
-    try { await document.fonts.load('400 80px "I.Ming"'); } catch (_) {}
+    try { await document.fonts.load('400 80px "Shuimu Old Song"',phrase); } catch (_) {}
     const chars = Array.from(phrase), result = document.createElement('canvas'); result.width = width * 2; result.height = height * 2;
     const out = result.getContext('2d'), layout = window.TypeLayout.reflected(chars, getAlignment());
     out.scale(2, 2);
@@ -198,7 +198,7 @@ window.createInkWorkshop = function ({ getLetters, getAlignment, onChange }) {
     chars.forEach((char, index) => {
       const glyph = document.createElement('canvas'); glyph.width = 118; glyph.height = 118;
       const g = glyph.getContext('2d');
-      g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = '400 80px "I.Ming", serif';
+      g.textAlign = 'center'; g.textBaseline = 'middle'; g.font = '400 80px "Shuimu Old Song", serif';
       const tone = Math.floor(27 + rng() * 12); g.fillStyle = `rgb(${tone},${tone + 3},${tone - 2})`;
       window.TypeLayout.paintGlyph(g,char,59,55);
       g.globalCompositeOperation = 'destination-in';
@@ -246,7 +246,7 @@ window.createInkWorkshop = function ({ getLetters, getAlignment, onChange }) {
     target.width = width * 2; target.height = height * 2;
     const context = target.getContext('2d');
     context.scale(2, 2); window.PrintPaper.paint(context);
-    context.font = '400 80px "I.Ming", serif';
+    context.font = '400 80px "Shuimu Old Song", serif';
     context.textAlign = 'center'; context.textBaseline = 'middle'; context.fillStyle = 'rgba(48,55,44,.25)';
     for (const tile of window.TypeLayout.reflected(getLetters(), getAlignment())) {
       window.TypeLayout.paintGlyph(context,tile.char,tile.x+tile.size/2,tile.y+tile.size/2-4);

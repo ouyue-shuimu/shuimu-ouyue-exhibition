@@ -4,7 +4,7 @@
  let ctx,master,musicGain,brushGain,brushFilter,noise,started=false,muted=false,chapter='cover',lastBrush=0,brushLevel=0,hidden=false;
  const counters={},lastCue={},subscribers=new Set();
  try{muted=localStorage.getItem('shuimu.sound.muted')==='true';}catch{}
- const music=new Audio('assets/audio/journey-theme.mp3');music.preload='auto';music.loop=true;
+ const music=new Audio('assets/audio/journey-theme.mp3');music.preload='none';music.loop=true;
  let musicIssue=false,trying=false,autoplayBlocked=false;
  function state(){return {started,muted,chapter,musicIssue,waitingForGesture:!muted&&(!started||autoplayBlocked||ctx?.state!=='running'),playing:!music.paused,currentTime:music.currentTime,context:ctx?.state,brushLevel,counters:{...counters}};}
  function notify(){for(const fn of subscribers)fn(state());}

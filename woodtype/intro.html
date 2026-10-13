@@ -7,9 +7,12 @@
   <meta name="description" content="认识温州瑞安木活字：技艺源流、谱牒文化、刻字拣字与刷印方法。">
   <title>木上有字 · 瑞安木活字｜水木之间</title>
   <style>
-    @font-face{font-family:SilkSong;src:url("./assets/SourceHanSerifSC-Light.otf") format("opentype");font-weight:300;font-display:swap}
-    @font-face{font-family:OldSong;src:url("./assets/I.Ming-8.10.ttf") format("truetype");font-weight:400;font-display:swap}
-    :root{color-scheme:light;--ink:#2c4035;--silk:#f4ecdd;--gold:#a48657;--muted:#62715f;font:300 16px/1.8 SilkSong,serif}
+@import url("./assets/shuimu-silk.css");
+@import url("./assets/shuimu-oldsong.css");
+
+    
+    
+    :root{color-scheme:light;--ink:#2c4035;--silk:#f4ecdd;--gold:#a48657;--muted:#62715f;font:300 16px/1.8 "Shuimu Silk",serif}
     *{box-sizing:border-box}body{margin:0;background:#e5dac7;color:var(--ink)}
     a{color:inherit}button{font:inherit;cursor:pointer}h1,h2,h3,p{margin:0}h1,h2,h3,strong{font-weight:300}
     a:focus-visible,button:focus-visible,[tabindex]:focus-visible{outline:3px solid #a8783d;outline-offset:4px}
@@ -54,7 +57,7 @@
     .step-body h3{font-size:1.375rem;margin-top:0}.step-body p{font-size:1rem;line-height:1.9}
     .step-detail{margin-top:12px;color:#586753;font-size:.875rem!important}
     .demo{display:flex;align-items:center;justify-content:center;gap:16px;min-height:145px}
-    .sample{display:grid;place-items:center;width:90px;height:105px;font:400 3.15rem/1 OldSong,serif;border:1px solid #aa8b60;background:#b58f62;color:#2e3125}
+    .sample{display:grid;place-items:center;width:90px;height:105px;font:400 3.15rem/1 "Shuimu Old Song",serif;border:1px solid #aa8b60;background:#b58f62;color:#2e3125}
     .sample.reverse span{transform:scaleX(-1)}
     .sample.paper{background:#f9f3e6;border-color:#c5b496}
     .demo-label{font-size:.8125rem;color:#6b735e;text-align:center}
