@@ -175,7 +175,7 @@
     .hero{height:var(--desk-hero-height)}.hero-inner{height:100%;padding:18px 16px 8px}
     .hero-top{font-size:11px;padding:4px 9px}.hero h1{font-size:clamp(26px,min(3vw,5dvh),58px);margin:0 0 8px}
     .hero-subtitle{font-size:17px;padding:4px 26px}.hero-copy{font-size:11px;margin-top:6px}
-    .bench{width:100%;max-width:2200px;margin:0 auto;padding:0 20px 6px;gap:20px;--sheet-width:min(450px,calc((100dvh - var(--desk-hero-height) - 335px)*.780488),calc((min(100vw,2200px) - 160px)/3))}
+    .bench{width:100%;max-width:none;margin:0 auto;padding:0 20px 6px;gap:20px;--sheet-width:min(450px,calc((100dvh - var(--desk-hero-height) - 335px)*.780488),calc((100vw - 160px)/3))}
     .station-head{height:39px}.plaque{font-size:22px;min-width:156px;padding:6px 22px}.station-note{height:25px;font-size:12px}
     .case{padding:14px}.category-tabs button{font-size:13px;padding:7px 1px}
     .type-tray{grid-auto-rows:auto;gap:7px;padding:7px;align-content:start}
@@ -209,7 +209,7 @@
     .print-shell{padding-top:0}
     .paper-bottom{display:none}
     @media(min-width:901px){
-      .bench{padding:0 40px;grid-template-columns:minmax(0,.887fr) minmax(0,1fr) minmax(0,.601fr);justify-content:stretch}
+      .bench{width:100%;max-width:none;padding:0 40px;grid-template-columns:minmax(0,.887fr) minmax(0,1fr) minmax(0,.601fr);justify-content:stretch}
       .case,.bed,.paper{height:var(--panel-height,auto);min-height:0}
       .case{display:flex;flex-direction:column;flex:none}.category-tabs,.custom-form,.case-foot{flex:none}.type-tray{flex:1;min-height:0}
       .compose-current{height:0;position:relative;top:-20px}
