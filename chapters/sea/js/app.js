@@ -1,4 +1,5 @@
 import {smooth,lerp,cargoPose,portPose} from './motion.js?v=20261012-11';
+import {ShipInspection} from './ship-inspection.js?v=20261014-9';
 const A='assets/';
 const SOURCES={
  river:{label:'浙江省交通运输厅｜温州—丽水海河联运启航（2024）',url:'https://jtyst.zj.gov.cn/art/2024/12/27/art_1229304975_59039943.html'},
@@ -37,10 +38,28 @@ const byId=id=>document.getElementById(id);
 const ui={stage:byId('stage'),nav:byId('chapterNav'),bgs:byId('backgrounds'),actors:byId('actorsCanvas'),count:byId('sceneCount'),eyebrow:byId('chapterEyebrow'),title:byId('chapterTitle'),lead:byId('chapterLead'),status:byId('actionStatus'),primary:byId('primaryButton'),prev:byId('previousButton'),next:byId('nextButton'),skip:byId('skipButton'),replay:byId('replayButton'),knowledge:byId('knowledgeButton'),modal:byId('modalBackdrop'),modalClose:byId('modalClose'),modalArt:byId('modalArt'),modalKicker:byId('modalKicker'),modalTitle:byId('modalTitle'),modalText:byId('modalText'),modalNote:byId('modalNote'),sources:byId('modalSources'),intro:byId('intro'),start:byId('startButton'),sound:byId('soundButton'),soundLabel:byId('soundLabel'),ending:byId('ending')};
 
 const state={current:0,unlocked:0,phase:[0,0,0,0,0],completed:[false,false,false,false,false],travel:[0,0,0,0,0],started:false,ready:false,sound:false,action:null,transition:null,lastFocus:null,sceneStart:performance.now()};
+let shipPausedAt=null;
+const shipInspection=new ShipInspection({sceneAudio:true,soundEnabled:()=>state.sound,toggleSound:()=>toggleSound(),onOpen(){shipPausedAt=performance.now();},onClose(){if(state.action&&shipPausedAt!==null)state.action.start+=performance.now()-shipPausedAt;shipPausedAt=null;ui.stage.querySelector('[data-ship]')?.classList.add('observed');updateUI();}});
 let water={update(){}};
 const images={};
+const WEDDING_FADE=3200;
+const WEDDING_MUSIC_FADE_START=22500;
+const WEDDING_MUSIC_FADE_DURATION=2000;
+let wedding={start:null};
 const assets={boat1:'ships/01-向右货舟.png',boat2:'ships/02-靠岸货船.png',boat4:'ships/04-行航帆船.png',boat5:'ships/05-远行海船.png',distantBoat:'ships/05-远处双帆小舟.png',small:'ships/04-小舟.png',wake:'sprites/船行水纹.png',workers:'sprites/02-空手与搬货-4列2行.png',loaders:'sprites/03-装卸-4列2行.png'};
 for(let i=1;i<=5;i++)assets['bg'+i]=`backgrounds/0${i}-净底图.png`;
+assets.cityClean='backgrounds/02-迎亲空街.png';
+function prepareWeddingLayers(){
+ const original=images.bg2,make=()=>{const c=document.createElement('canvas');c.width=original.width;c.height=original.height;return c;};
+ const mask=make(),m=mask.getContext('2d');m.scale(mask.width/1000,mask.height/562.5);m.filter='blur(7px)';m.fillRect(738,149,177,81);
+ const masked=(source)=>{const c=make(),ctx=c.getContext('2d');ctx.drawImage(source,0,0,c.width,c.height);ctx.globalCompositeOperation='destination-in';ctx.drawImage(mask,0,0);return c;};
+ images.weddingLayer=masked(original);
+ const base=make(),ctx=base.getContext('2d');ctx.drawImage(original,0,0);ctx.drawImage(masked(images.cityClean),0,0);images.bg2=base;
+ ui.bgs.children[1].src=base.toDataURL('image/png');
+}
+function weddingOpacity(now){return wedding.start===null?0:smooth((now-wedding.start)/WEDDING_FADE);}
+function weddingMusicLevel(now){if(wedding.start===null||state.completed[1])return 0;return weddingOpacity(now)*(1-smooth((now-wedding.start-WEDDING_MUSIC_FADE_START)/WEDDING_MUSIC_FADE_DURATION));}
+function beginWedding(){wedding={start:performance.now()};startWeddingAudio();}
 function loadImage(key,path){return new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>{
  if(key==='distantBoat'){
   const sprite=document.createElement('canvas');sprite.width=im.width;sprite.height=im.height;
@@ -63,8 +82,9 @@ function hotspots(){
  layer.hidden=!state.started||!state.ready||!!state.transition||(state.current===4&&state.completed[4]);
  if(layer.dataset.scene!==String(state.current)){
   layer.dataset.scene=state.current;
-  layer.innerHTML=SCENES[state.current].hotspots.map((h,i)=>`<button class="hotspot" type="button" data-hot="${i}" style="left:${h.x}%;top:${h.y}%"><span class="hotspot-icon">${h.icon}</span>${h.label}</button>`).join('');
+  layer.innerHTML=SCENES[state.current].hotspots.map((h,i)=>`<button class="hotspot" type="button" data-hot="${i}" style="left:${h.x}%;top:${h.y}%"><span class="hotspot-icon">${h.icon}</span>${h.label}</button>`).join('')+(state.current===2?'<button class="ship-ripple" type="button" data-ship aria-label="点击船，观察王振鹏画中的船舶"><i aria-hidden="true"></i><span>点船观形</span></button>':'');
   layer.querySelectorAll('[data-hot]').forEach(b=>b.onclick=()=>openCard(SCENES[state.current].hotspots[+b.dataset.hot]));
+  const shipButton=layer.querySelector('[data-ship]');if(shipButton)shipButton.onclick=()=>shipInspection.open();
  }
 }
 function updateUI(){
@@ -79,28 +99,30 @@ function updateUI(){
  ui.stage.classList.toggle('transitioning',!!state.transition);hotspots();
 }
 function progress(now){return state.action?Math.max(0,Math.min(1,(now-state.action.start)/state.action.duration)):state.travel[state.current];}
-function complete(){const i=state.current;state.travel[i]=1;state.completed[i]=true;if(i<4)state.unlocked=Math.max(state.unlocked,i+1);state.action=null;updateUI();if(i===4){ui.ending.hidden=false;requestAnimationFrame(()=>ui.ending.classList.add('visible'));}}
-function runAction(label,duration,callback){if(state.action||state.transition)return;state.action={label,duration,start:performance.now(),callback};updateUI();}
-function finishAction(){if(!state.action)return;const fn=state.action.callback;state.travel[state.current]=1;state.action=null;fn();}
+function complete(){const i=state.current;state.travel[i]=1;state.completed[i]=true;if(i<4)state.unlocked=Math.max(state.unlocked,i+1);state.action=null;if(i===1){cues.wedding.pause();cues.wedding.currentTime=0;fadeOutCity();}if(i===2)fadeOutAudio(thirdWater);updateUI();if(i===4){ui.ending.hidden=false;requestAnimationFrame(()=>ui.ending.classList.add('visible'));}}
+function runAction(label,duration,callback){if(state.action||state.transition)return;state.action={label,duration,start:performance.now(),callback};if(state.sound&&isSailing())sailingSound.start();updateUI();}
+function finishAction(){if(!state.action)return;const from=state.current,fn=state.action.callback,keepDockWater=from===1;state.travel[from]=1;state.action=null;if(from!==0&&!keepDockWater)sailingSound.stop();fn();if(from===0&&!state.transition)sailingSound.stop();}
 function perform(){
- if(!state.started||!state.ready||state.action||state.transition||!ui.modal.hidden||state.completed[state.current])return;
+ if(!state.started||!state.ready||state.action||state.transition||!ui.modal.hidden||shipInspection.isOpen||state.completed[state.current])return;
  const i=state.current;
  if(i===0)runAction('小舟向右启程…',8500,()=>{complete();navigate(1);});
  else if(i===1){
   if(state.phase[i]===0){citySound();runAction('两艘船缓缓靠岸…',10000,()=>{state.phase[i]=1;state.travel[i]=0;updateUI();});}
-  else{state.phase[i]=2;runAction('沿岸道取货，沿原路返回…',26000,complete);}
+  else{state.phase[i]=2;runAction('沿岸道取货，沿原路返回…',26000,complete);beginWedding();}
  }else if(i===2){playCue('rope',.13);runAction('搬运、装载与系缆…',9000,complete);}
  else if(i===3)runAction('扬帆驶过双塔…',11000,complete);
  else runAction('船帆渐远，驶向江海…',20000,complete);
 }
 function navigate(i){
- if(state.action||state.transition||i<0||i>state.unlocked||i>4||i===state.current)return;
+ if(state.action||state.transition||shipInspection.isOpen||i<0||i>state.unlocked||i>4||i===state.current)return;
  closeCard();const snapshot=document.createElement('canvas');snapshot.width=ui.actors.width;snapshot.height=ui.actors.height;snapshot.getContext('2d').drawImage(ui.actors,0,0);
  const old=state.current;state.current=i;state.sceneStart=performance.now();state.transition={from:old,start:performance.now(),duration:3200,snapshot};
- cityTimers.forEach(clearTimeout);cityTimers=[];['port','vendor','wedding'].forEach(k=>cues[k].pause());
+ stopCitySound();if(!(old===0&&i===1))sailingSound.stop();
+ if(i===1&&state.sound)startMarket(0);
+ thirdWater.stop();if(i===2)startThirdWater();
  ui.ending.classList.remove('visible');ui.ending.hidden=true;updateUI();
 }
-function replay(){if(state.action||state.transition)return;state.phase[state.current]=0;state.travel[state.current]=0;state.completed[state.current]=false;ui.ending.classList.remove('visible');ui.ending.hidden=true;state.sceneStart=performance.now();updateUI();}
+function replay(){if(state.action||state.transition)return;state.phase[state.current]=0;state.travel[state.current]=0;state.completed[state.current]=false;state.sceneStart=performance.now();if(state.current===1){stopCitySound();sailingSound.stop();wedding={start:null};citySound();}if(state.current===2){thirdWater.stop();startThirdWater();}ui.ending.classList.remove('visible');ui.ending.hidden=true;updateUI();}
 function drawAtlas(ctx,key,col,row,cols,rows,x,y,w,h,alpha=1,flip=false){const im=images[key];if(!im)return;const sw=im.width/cols,sh=im.height/rows;ctx.save();ctx.globalAlpha*=alpha;ctx.translate(x,y);if(flip)ctx.scale(-1,1);ctx.drawImage(im,col*sw,row*sh,sw,sh,-w/2,-h,w,h);ctx.restore();}
 function drawBoat(ctx,key,cx,base,w,h,alpha=1,moving=false){
  const im=images[key];if(!im)return;ctx.save();ctx.globalAlpha*=alpha;ctx.translate(cx,base);
@@ -125,6 +147,7 @@ function drawActors(now){
  const bob=moving?Math.sin(local*1.25)*.6:0;
  if(i===0)drawBoat(ctx,'boat1',lerp(530,893,smooth(p)),445+bob,213,82,1,moving);
  if(i===1){
+  ctx.save();ctx.globalAlpha*=weddingOpacity(now);ctx.drawImage(images.weddingLayer,0,0,1000,562.5);ctx.restore();
   const dock=phase===0?smooth(p):1;
   drawBoat(ctx,'boat2',lerp(1110,903,smooth(Math.max(0,(dock-.12)/.88))),384,128,94,1,moving&&phase===0);
   drawBoat(ctx,'boat2',lerp(1150,878,dock),485+bob,205,150,1,moving&&phase===0);
@@ -165,40 +188,64 @@ function drawActors(now){
  ctx.restore();
 }
 function tick(now){
- if(state.action&&progress(now)>=1)finishAction();
- if(state.transition&&now-state.transition.start>=state.transition.duration){state.transition=null;updateUI();if(state.current===4&&state.completed[4]){ui.ending.hidden=false;ui.ending.classList.add('visible');}}
+ if(!shipInspection.isOpen&&state.action&&progress(now)>=1)finishAction();
+ for(let n=audioFades.length-1;n>=0;n--){const fade=audioFades[n],amount=Math.max(0,Math.min(1,(now-fade.start)/fade.duration));fade.audio.volume=fade.from+((fade.to??0)-fade.from)*smooth(amount);if(amount>=1){if((fade.to??0)===0){fade.audio.pause();fade.audio.currentTime=0;}audioFades.splice(n,1);}}
+ if(state.current===1&&state.sound&&!state.completed[1]&&!state.transition){
+  const voice=cues.vendor,remaining=Number.isFinite(voice.duration)?voice.duration-voice.currentTime:Infinity;
+  const voiceLevel=voice.paused?0:smooth(voice.currentTime/.7)*smooth(remaining/.9);
+  voice.volume=.08*voiceLevel;
+  if(marketOn)cityMarket.audio.volume=lerp(cityMarket.audio.volume,cityMarket.vol*(1-.28*voiceLevel),.12);
+ }
+ if(state.current===1&&state.sound&&wedding.start!==null){const level=weddingMusicLevel(now);cues.wedding.volume=.24*level;if(level===0&&!cues.wedding.paused){cues.wedding.pause();cues.wedding.currentTime=0;}}
+ if(state.transition&&now-state.transition.start>=state.transition.duration){const firstToCity=state.transition.from===0&&state.current===1;state.transition=null;updateUI();if(firstToCity)sailingSound.stop();if(state.current===1){if(state.sound)cityMarket.audio.volume=cityMarket.vol;citySound();}if(state.current===2)startThirdWater();if(state.current===4&&state.completed[4]){ui.ending.hidden=false;ui.ending.classList.add('visible');}}
  const t=state.transition,weight=t?smooth((now-t.start)/t.duration):1;
+ if(t&&state.current===1&&state.sound){if(t.from===0)sailingSound.audio.volume=sailingSound.vol*(1-weight);cityMarket.audio.volume=cityMarket.vol*weight;}
  [...ui.bgs.children].forEach((b,n)=>{b.style.transition='none';b.style.zIndex=n===state.current?'1':'0';b.style.opacity=n===state.current?weight:t&&n===t.from?1:0;});
  // During the dissolve use only the blended paintings, so old water never overlays incoming land.
  water.update(now/1000,state.current,-1,t?0:1);
- drawActors(now);requestAnimationFrame(tick);
+ drawActors(shipPausedAt??now);requestAnimationFrame(tick);
 }
 function openCard(card){state.lastFocus=document.activeElement;ui.modalKicker.textContent=`第${['一','二','三','四','五'][state.current]}幕 · 文化笔记`;ui.modalTitle.textContent=card.title;ui.modalText.textContent=card.text;ui.modalNote.textContent=card.note||'';ui.modalNote.hidden=!card.note;ui.modalArt.style.backgroundImage=`url('${A+assets['bg'+(state.current+1)]}')`;ui.sources.replaceChildren();(card.sources||[]).forEach(s=>{const el=document.createElement(s.url?'a':'span');if(s.url){el.href=s.url;el.target='_blank';el.rel='noopener noreferrer';}el.textContent=`资料来源：${s.label}${s.url?' ↗':''}`;ui.sources.append(el);});ui.modal.hidden=false;ui.modalClose.focus();}
 function closeCard(){if(ui.modal.hidden)return;ui.modal.hidden=true;state.lastFocus?.focus?.();}
-class Loop{constructor(src,vol){this.audio=new Audio(src);this.audio.preload="none";this.audio.loop=true;this.audio.volume=vol;this.vol=vol;}start(){this.audio.volume=this.vol;this.audio.play().catch(()=>{});}stop(){this.audio.pause();this.audio.currentTime=0;}}
-const ambience=[new Loop(A+'audio/01-water-synthetic.wav',.13),new Loop(A+'audio/02-wind-synthetic.wav',.045)];const cues={port:new Audio(A+'audio/03-port-murmur-stylized.wav'),wood:new Audio(A+'audio/04-wood-creak-synthetic.wav'),rope:new Audio(A+'audio/05-rope-friction-synthetic.wav'),vendor:new Audio(A+'audio/叫卖-茶水.wav'),wedding:new Audio(A+'audio/迎亲吹奏-合成.wav')};Object.values(cues).forEach(audio=>audio.preload="none");let cityTimers=[];
+class Loop{constructor(src,vol){this.audio=new Audio(src);this.audio.preload='none';this.audio.loop=true;this.audio.volume=vol;this.vol=vol;}start(initialVolume=this.vol){audioFades=audioFades.filter(f=>f.audio!==this.audio);this.audio.volume=initialVolume;this.audio.play().catch(()=>{});}stop(){audioFades=audioFades.filter(f=>f.audio!==this.audio);this.audio.pause();this.audio.currentTime=0;}}
+const sailingSound=new Loop(A+'audio/流水.mp3',.24);
+const thirdWater=new Loop(A+'audio/流水.mp3',.24);
+function startThirdWater(){if(!state.sound||state.current!==2||state.completed[2]||!thirdWater.audio.paused)return;thirdWater.start(0);audioFades.push({audio:thirdWater.audio,from:0,to:thirdWater.vol,start:performance.now(),duration:1800});}
+const cityMarket=new Loop(A+'audio/集市.mp3',.32);
+const cues={wood:new Audio(A+'audio/04-wood-creak-synthetic.wav'),rope:new Audio(A+'audio/05-rope-friction-synthetic.wav'),vendor:new Audio(A+'audio/吃茶来-自然版-第二句快接.mp3'),wedding:new Audio(A+'audio/娶亲.mp3')};
+Object.values(cues).forEach(audio=>audio.preload='none');
+cues.wedding.loop=true;
+let cityTimers=[],cityActive=false,marketOn=false,audioFades=[];
 function playCue(a,vol=.2){if(!state.sound)return;const c=cues[a];if(c){c.currentTime=0;c.volume=vol;c.play().catch(()=>{});}}
-function applySound(enabled){
- const changed=state.sound!==enabled;state.sound=enabled;
- ui.soundLabel.textContent=state.sound?'关闭声音':'开启声音';ui.sound.setAttribute('aria-label',ui.soundLabel.textContent);ui.sound.setAttribute('aria-pressed',String(state.sound));
- if(!changed)return;
- if(state.sound){ambience.forEach(a=>a.start());if(state.current===1)citySound();}
- else{ambience.forEach(a=>a.stop());Object.values(cues).forEach(a=>{a.pause();a.currentTime=0;});cityTimers.forEach(clearTimeout);cityTimers=[];}
+function isSailing(){return !state.transition&&((!!state.action&&(state.current===0||state.current===3||state.current===4))||(state.current===1&&!state.completed[1]&&(!!state.action||state.phase[1]>0)));}
+function fadeOutAudio(target,duration=WEDDING_FADE){const audio=target instanceof Loop?target.audio:target;if(audio.paused)return;audioFades=audioFades.filter(item=>item.audio!==audio);audioFades.push({audio,from:audio.volume,start:performance.now(),duration});}
+function fadeOutCity(){cityTimers.forEach(clearTimeout);cityTimers=[];cityActive=false;marketOn=false;fadeOutAudio(cityMarket);fadeOutAudio(sailingSound);fadeOutAudio(cues.vendor);}
+function startWeddingAudio(){if(!state.sound||state.current!==1||wedding.start===null||state.completed[1]||performance.now()-wedding.start>=WEDDING_MUSIC_FADE_START+WEDDING_MUSIC_FADE_DURATION)return;cues.wedding.volume=.24*weddingMusicLevel(performance.now());cues.wedding.play().catch(()=>{});}
+function startMarket(volume=cityMarket.vol){if(!state.sound||state.current!==1||state.completed[1]||marketOn)return;cityMarket.start(volume);marketOn=true;}
+function stopCitySound(){cityTimers.forEach(clearTimeout);cityTimers=[];cityMarket.stop();['vendor','wedding'].forEach(k=>{audioFades=audioFades.filter(f=>f.audio!==cues[k]);cues[k].pause();cues[k].currentTime=0;});cityActive=false;marketOn=false;}
+function playVendor(){if(!state.sound||state.current!==1||state.completed[1])return;const voice=cues.vendor;voice.pause();voice.currentTime=0;voice.volume=0;voice.play().catch(()=>{});}
+function citySound(){
+ if(!state.sound||state.current!==1||state.completed[1]||cityActive||state.transition)return;
+ cityActive=true;startMarket();
+ cityTimers=[
+  setTimeout(playVendor,Math.max(0,5000-(performance.now()-state.sceneStart)))
+ ];
+ startWeddingAudio();
 }
-function syncJourneySound(s){applySound(state.started&&s.started&&!s.muted&&!document.hidden);}
+function applySound(enabled){const changed=state.sound!==Boolean(enabled);state.sound=Boolean(enabled);ui.soundLabel.textContent=state.sound?'关闭声音':'开启声音';ui.sound.setAttribute('aria-label',ui.soundLabel.textContent);if(changed){if(state.sound){startThirdWater();if(isSailing())sailingSound.start();if(state.current===1&&!state.completed[1]){if(state.transition){const weight=smooth((performance.now()-state.transition.start)/state.transition.duration);if(state.transition.from===0)sailingSound.start(sailingSound.vol*(1-weight));startMarket(cityMarket.vol*weight);}else citySound();}}else{thirdWater.stop();sailingSound.stop();stopCitySound();Object.values(cues).forEach(a=>{a.pause();a.currentTime=0;});}}shipInspection.syncSound();}
+function syncJourneySound(sound){applySound(state.started&&sound.started&&!sound.muted&&!document.hidden);}
 function toggleSound(){if(window.JourneySfx){window.JourneySfx.toggle();return;}applySound(!state.sound);}
 const unsubscribeSound=window.JourneySfx?.subscribe(syncJourneySound);
-window.addEventListener('pagehide',()=>{unsubscribeSound?.();applySound(false);water.dispose?.();});
-function citySound(){if(!state.sound||state.current!==1)return;playCue('port',.22);playCue('vendor',.26);playCue('wedding',.15);cityTimers=[setTimeout(()=>playCue('vendor',.23),8500),setTimeout(()=>playCue('wedding',.14),14500)];}
 
 function bind(){
  ui.start.onclick=()=>{if(!state.ready)return;state.started=true;ui.intro.classList.add('closed');if(window.JourneySfx){window.JourneySfx.start();syncJourneySound(window.JourneySfx.state());}else applySound(true);state.transition={from:0,start:performance.now(),duration:950,intro:true};updateUI();};
  ui.sound.onclick=toggleSound;ui.primary.onclick=perform;ui.prev.onclick=()=>navigate(state.current-1);ui.next.onclick=()=>navigate(state.current+1);ui.skip.onclick=finishAction;ui.replay.onclick=replay;ui.knowledge.onclick=()=>openCard(SCENES[state.current].card);ui.modalClose.onclick=closeCard;ui.modal.onclick=e=>{if(e.target===ui.modal)closeCard();};
- document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCard();return;}if(!state.started||!ui.modal.hidden||state.action||state.transition)return;if(e.key==='ArrowLeft')navigate(state.current-1);if(e.key==='ArrowRight')navigate(state.current+1);});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeCard();return;}if(!state.started||!ui.modal.hidden||shipInspection.isOpen||state.action||state.transition)return;if(e.key==='ArrowLeft')navigate(state.current-1);if(e.key==='ArrowRight')navigate(state.current+1);});
  let start=null;ui.stage.addEventListener('pointerdown',e=>{if(e.target.closest('button'))return;start={x:e.clientX,y:e.clientY};});ui.stage.addEventListener('pointerup',e=>{if(!start||!state.started||state.action||state.transition)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;start=null;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.4)navigate(state.current+(dx<0?1:-1));});
  document.addEventListener('visibilitychange',()=>{if(document.hidden)applySound(false);else if(window.JourneySfx)syncJourneySound(window.JourneySfx.state());});
+ window.addEventListener('pagehide',()=>{applySound(false);unsubscribeSound?.();},{once:true});
 }
 setup();bind();updateUI();
-loading.then(()=>{state.ready=true;ui.start.disabled=false;ui.start.textContent='开始行舟 →';updateUI();requestAnimationFrame(tick);}).catch(e=>{console.error(e);ui.start.textContent='素材载入失败，请刷新重试';ui.status.textContent=`素材读取失败：${e.message}`;});
+loading.then(()=>{prepareWeddingLayers();state.ready=true;ui.start.disabled=false;ui.start.textContent='开始行舟 →';updateUI();requestAnimationFrame(tick);}).catch(e=>{console.error(e);ui.start.textContent='素材载入失败，请刷新重试';ui.status.textContent=`素材读取失败：${e.message}`;});
 // Optional water rendering must not block loading the rest of the experience.
 import('./water-scene.js').then(({WaterScene})=>{water=new WaterScene(ui.stage,console.warn);}).catch(e=>console.warn('水面暂不可用，其他交互正常。',e));

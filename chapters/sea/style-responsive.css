@@ -1,17 +1,18 @@
-/* Let the full-size painting and the cream navigation occupy separate scroll sections. */
-.visual-area{width:min(100%,1920px);height:auto;aspect-ratio:16/9;min-height:0;max-height:none;margin:0 auto}
-.experience{height:auto;min-height:calc(100svh - 64px);position:relative;overflow:visible;display:flex;flex-direction:column}
-.visual-area{position:relative;inset:auto;flex:none;overflow:hidden}
-.stage{inset:0;width:100%;height:100%;aspect-ratio:16/9;max-height:none;transform:none}
+/* Keep the controls visible while the full-size painting scrolls inside its own area. */
+body{overflow:hidden}
+.app{height:100svh;height:100dvh;min-height:0;display:flex;flex-direction:column;overflow:hidden}
+.experience{height:auto;min-height:0;flex:1;position:relative;overflow:hidden;display:flex;flex-direction:column}
+.visual-area{position:relative;inset:auto;width:100%;height:auto;min-height:0;max-height:none;aspect-ratio:auto;flex:1;margin:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain}
+.stage{position:relative;inset:auto;width:min(100%,1920px);height:auto;aspect-ratio:16/9;max-height:none;margin:0 auto;transform:none}
 .intro{background-image:linear-gradient(#0d2529a8,#0d2529d9),url('assets/backgrounds/01-净底图.png')}
 .intro-overline{margin-top:0}
 .hotspot-layer{animation:hotspots-in .7s ease both}
 .hotspot{font-size:clamp(11px,1vw,17px);padding:8px 13px}
 .hotspot-icon{width:1.65em;height:1.65em;font-size:.85em}
 .transitioning .scene-count,.transitioning .scene-caption{visibility:hidden}
-.topbar{height:64px;position:sticky;top:0}
-.control-area{position:relative;inset:auto;z-index:1;flex:none;min-height:126px;margin-top:-24px;padding:8px clamp(20px,4vw,76px) 10px;gap:20px;background:#f1e8d7;color:#183a40;border-top:1px solid #c5b698}
-.scene-caption{top:auto;right:auto;bottom:46px;left:24px}
+.topbar{height:64px;position:relative;flex:none}
+.control-area{position:relative;inset:auto;z-index:1;flex:none;width:100%;min-height:126px;max-height:45dvh;margin-top:0;padding:8px clamp(20px,4vw,76px) 10px;gap:20px;overflow-y:auto;background:#f1e8d7;color:#183a40;border-top:1px solid #c5b698}
+.scene-caption{top:auto;right:auto;bottom:18px;left:24px}
 .chapter-copy h1{font-size:clamp(24px,2.1vw,36px);margin:3px 0}
 .control-area .chapter-overline,.control-area .chapter-copy p,.control-area .text-link,.control-area .action-status,.control-area .replay-button,.control-area .button.secondary{color:#183a40}
 .control-area .button.primary{background:#8d7049;color:#fff8e9;border-color:#8d7049}
@@ -35,5 +36,5 @@
 @keyframes ending-unfurl{from{opacity:0;transform:translateY(16px) scale(.94);clip-path:inset(46% 0 46% 0)}to{opacity:1;transform:translateY(0) scale(1);clip-path:inset(0)}}
 @keyframes ending-glimmer{to{transform:translateX(130%)}}
 @keyframes hotspots-in{from{opacity:0}to{opacity:1}}
-@media(max-width:850px){.topbar{height:auto}.experience{min-height:0}.visual-area{width:100%;height:auto;min-height:0;aspect-ratio:16/9}.stage{width:100%;height:100%}.hotspot{padding:4px 6px;font-size:10px}.hotspot-icon{display:none}.scene-count{right:10px;top:10px;font-size:10px}.scene-caption{left:10px;bottom:8px;font-size:10px}.control-area{min-height:0;margin-top:-12px;padding:16px 20px}}
+@media(max-width:850px){.topbar{height:auto}.visual-area{width:100%;min-height:0}.stage{width:100%;height:auto}.hotspot{padding:4px 6px;font-size:10px}.hotspot-icon{display:none}.scene-count{right:10px;top:10px;font-size:10px}.scene-caption{left:10px;bottom:8px;font-size:10px}.control-area{min-height:0;max-height:45dvh;margin-top:0;padding:12px 20px}.control-area .action-group{order:-1;margin-top:0}}
 @media(prefers-reduced-motion:reduce){.hotspot-layer,.ending.visible .ending-content,.ending.visible .ending-content::after{animation:none}}
