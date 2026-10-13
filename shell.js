@@ -26,6 +26,7 @@
   document.getElementById('routeTitle').textContent=r.title;
   document.getElementById('routeCount').textContent=['封面','序章','水木成器','城中有声','一江通海','今古相接','结章'][r.step-1]+' · '+r.step+' / 七';
   document.getElementById('routeHint').textContent=r.hint;
+  document.getElementById('routeHint').hidden=route==='woodtype/index.html';
   const dots=document.getElementById('routeDots');
   dots.replaceChildren(...Array.from({length:7},(_,i)=>{const dot=document.createElement('i');dot.className=i===r.step-1?'active':i<r.step-1?'past':'';return dot;}));
   dots.setAttribute('aria-valuenow',String(r.step));dots.setAttribute('aria-valuetext',r.title);

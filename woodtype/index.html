@@ -210,6 +210,7 @@
     .paper-bottom{display:none}
     @media(min-width:901px){
       .bench{width:100%;max-width:none;padding:0 40px;grid-template-columns:minmax(0,.887fr) minmax(0,1fr) minmax(0,.601fr);justify-content:stretch}
+      .bench>.station:nth-child(2){transform:translateX(var(--compose-offset,0px))}
       .case,.bed,.paper{height:var(--panel-height,auto);min-height:0}
       .case{display:flex;flex-direction:column;flex:none}.category-tabs,.custom-form,.case-foot{flex:none}.type-tray{flex:1;min-height:0}
       .compose-current{height:0;position:relative;top:-20px}
@@ -235,6 +236,11 @@
       .alignment-controls{padding:2px 0}.alignment-controls #alignmentHint{display:none}
       .controls button{padding:5px;min-height:30px}.controls .spacer{display:none}
     }
+    .page{display:flex;flex-direction:column}
+    .bench{flex:none}
+    .continuation-band{flex:1;display:flex;align-items:center;justify-content:center;min-height:72px;padding:12px 24px;background:var(--desk-surround)}
+    .continuation-band .continue-note{margin:0;font-size:19px!important;line-height:1.6}
+    @media(max-width:900px){.continuation-band{min-height:58px;padding:10px 14px}.continuation-band .continue-note{font-size:16px!important}}
   </style>
 </head>
 <body>
@@ -283,6 +289,7 @@
         </div>
       </section>
     </main>
+    <section class="continuation-band" aria-label="继续瓯越行旅"><p class="continue-note">完成印刷后，点击底部「确认原句 · 下一程」继续。</p></section>
     <div class="mobile-stage-controls"><button type="button" class="stage-back" id="stageBack" hidden>上一步</button><button type="button" id="stageNext">去排版 →</button></div>
     <button id="journeyContinue" hidden disabled type="button">确认原句 · 去听一出戏</button>
     <div class="visually-hidden" id="announcer" aria-live="polite"></div>
@@ -340,7 +347,7 @@
           if(version!==printVersion)return;
           impressionCanvas=art;printed=window.TypeLayout.reading(letters);
           setPrintReady(true);
-          // The continuation instruction stays in place below the print sheet.
+          // The continuation instruction stays in the band below the workbench.
           const preview=$('impressionPreview');preview.width=art.width;preview.height=art.height;preview.getContext('2d').drawImage(art,0,0);preview.hidden=false;preview.classList.remove('draft');
           $('paper').classList.remove('printed');void $('paper').offsetWidth;$('paper').classList.add('printed');
           $('paperStatus').textContent='墨落纸上 · 字留此刻';$('printHint').textContent='细微的墨色深浅，留下亲手刷印的痕迹。';$('downloadBtn').hidden=false;
@@ -400,7 +407,7 @@
       const desk=document.querySelector('.bench'),panels=[document.querySelector('.case'),document.querySelector('.bed'),document.querySelector('.paper')];
       const desktop=matchMedia('(min-width:901px)');let frame=0;
       function alignPanels(){
-        desk.style.removeProperty('--panel-height');desk.style.removeProperty('--sheet-width');
+        desk.style.removeProperty('--panel-height');desk.style.removeProperty('--sheet-width');desk.style.removeProperty('--compose-offset');
         const tray=document.querySelector('.type-tray');tray.style.removeProperty('grid-template-columns');
         if(!desktop.matches)return;
         // Reserve the complete controls before sizing, including the post-print actions.
@@ -414,12 +421,15 @@
           desk.style.setProperty('--sheet-width',height*640/820+'px');
           const panelTop=panels[0].getBoundingClientRect().top;
           const tails=panels.slice(1).map(panel=>panel.parentElement.getBoundingClientRect().bottom-panel.getBoundingClientRect().bottom);
-          const room=innerHeight-panelTop-Math.max(...tails)-parseFloat(getComputedStyle(desk).paddingBottom)-4;
+          const room=innerHeight-panelTop-Math.max(...tails)-parseFloat(getComputedStyle(desk).paddingBottom)-72-4;
           if(height<=room||columns>=8)break;
           tray.style.gridTemplateColumns=`repeat(${++columns},minmax(0,1fr))`;
         }
         extraActions.forEach((button,i)=>button.hidden=hidden[i]);
         desk.style.setProperty('--panel-height',height+'px');
+        const [typeCase,composition,printSheet]=panels.map(panel=>panel.getBoundingClientRect());
+        const leftGap=composition.left-typeCase.right,rightGap=printSheet.left-composition.right;
+        desk.style.setProperty('--compose-offset',(rightGap-leftGap)/2+'px');
       }
       function schedule(){cancelAnimationFrame(frame);frame=requestAnimationFrame(alignPanels)}
       addEventListener('resize',schedule);desktop.addEventListener('change',schedule);
