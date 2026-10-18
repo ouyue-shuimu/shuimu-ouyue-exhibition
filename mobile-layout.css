@@ -1,0 +1,152 @@
+/* The desktop composition is unchanged; mobile controls use document flow. */
+@media(max-width:760px){
+ html[data-mobile-page]{scrollbar-gutter:auto;overflow-x:hidden}
+ html[data-mobile-page] body{max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+ html[data-mobile-page] input[type=text],html[data-mobile-page] textarea{font-size:16px}
+ html[data-mobile-page] button,html[data-mobile-page] a{touch-action:manipulation}
+ html[data-mobile-page=shell] .river-nav{padding:6px 10px max(6px,env(safe-area-inset-bottom));gap:6px}
+ html[data-mobile-page=shell] .route-info{display:flex;align-items:center;gap:7px;font-size:12px;min-height:18px}
+ html[data-mobile-page=shell] #routeCount{font-size:10px;flex:none}
+ html[data-mobile-page=shell] #routeTitle{font-size:12px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ html[data-mobile-page=shell] .route-dots{display:flex;gap:4px;flex:none}
+ html[data-mobile-page=shell] .route-dots i{width:9px;height:2px}
+ html[data-mobile-page=shell] .route-actions{gap:5px}
+ html[data-mobile-page=shell] .route-actions button{min-height:42px;padding:6px 7px;font-size:12px}
+ html[data-mobile-page=shell] #soundToggle{min-width:58px;font-size:10px;padding-inline:2px}
+ html[data-mobile-page=shell] #routeNext{font-size:12px}
+ html[data-mobile-page=cover] .cover.scene{display:flex;flex-direction:column;height:100dvh;min-height:0;justify-content:flex-start;gap:0;padding:0;overflow-y:auto;background:linear-gradient(#609b8f,#507f73)}
+ html[data-mobile-page=cover] .artboard{position:relative;inset:auto;transform:none;margin:0;width:100%;height:auto;aspect-ratio:1672/941;flex:none;z-index:0;opacity:1}
+ html[data-mobile-page=cover] .backdrop{height:auto;object-fit:contain}
+ html[data-mobile-page=cover] .cover:after,html[data-mobile-page=cover] .mobile-title{display:none}
+ html[data-mobile-page=cover] .invitation{position:relative;inset:auto;transform:none;display:flex;flex:1;flex-direction:column;justify-content:center;align-items:center;width:100%;padding:24px 16px 62px;margin:0;min-height:210px}
+ html[data-mobile-page=cover] .invitation p{font-size:16px;line-height:1.8;margin:0 0 20px;letter-spacing:.08em}
+ html[data-mobile-page=cover] .enter{min-width:184px;min-height:62px;font-size:23px}
+ html[data-mobile-page=cover] .hint{font-size:13px}
+ html[data-mobile-page=prologue] .prologue-copy{padding-bottom:12px}
+ html[data-mobile-page=prologue] .prologue.scene{height:auto;min-height:100dvh;overflow:visible;padding:28px 0 64px}
+ html[data-mobile-page=prologue] .prologue-copy{position:relative;inset:auto;width:calc(100% - 40px);max-width:none;margin:0 20px}
+ html[data-mobile-page=prologue] .prologue .poem{font-size:16px;line-height:1.8}
+ html[data-mobile-page=prologue] .prologue .motion-control{position:relative;float:right;margin:6px 16px;right:auto;bottom:auto}
+ html[data-mobile-page=workshop] .scene{height:auto;min-height:100dvh;display:flex;flex-direction:column;justify-content:center;gap:22px;background:#d8c8a9;padding:16px 0 22px}
+ html[data-mobile-page=workshop] body{overflow-y:auto}
+ html[data-mobile-page=workshop] .journey-back{position:relative;left:auto;top:auto;align-self:flex-start;margin:0 14px;font-size:12px;padding:9px 12px}
+ .mobile-workshop-art{position:relative;width:100%;aspect-ratio:1672/941;flex:none;overflow:hidden}
+ html[data-mobile-page=workshop] .scene-image,html[data-mobile-page=workshop] .boat-image{object-position:center;object-fit:cover}
+ html[data-mobile-page=workshop] .type-hotspot{left:8%;top:42%;width:34%;height:48%;transform:none}
+ html[data-mobile-page=workshop] .guide{position:relative;left:auto;right:auto;top:auto;bottom:auto;align-self:center;width:calc(100% - 36px);max-width:380px;margin:0;transform:none;animation:none;font-size:16px;opacity:1}
+ html[data-mobile-page=workshop] .guide-label{font-size:16px;white-space:normal}
+ html[data-mobile-page=workshop] .motion-toggle{position:relative;right:auto;bottom:auto;align-self:flex-end;margin:0 16px;min-height:40px;color:#334c3d;background:#f5ead5}
+ html[data-mobile-page=workshop] .cloud-canvas{display:none}
+ html[data-mobile-page=wood-intro] .tabs,html[data-mobile-page=bridge] .tabs{overflow-x:auto;overscroll-behavior-x:contain}
+ html[data-mobile-page=wood-intro] button,html[data-mobile-page=bridge] button{min-height:40px}
+ html[data-mobile-page=woodtype] .category-tabs button,html[data-mobile-page=woodtype] .workbench-tabs button{min-height:38px}
+ html[data-mobile-page=woodtype] .mobile-stage-controls button,html[data-mobile-page=woodtype] .print-btn{min-height:44px}
+ html[data-mobile-page=woodtype] .controls{flex-wrap:wrap;gap:6px}
+ html[data-mobile-page=woodtype] .controls button,html[data-mobile-page=woodtype] .alignment-controls button{min-height:36px}
+ html[data-mobile-page=woodtype] .alignment-controls{flex-wrap:wrap}
+ html[data-mobile-page=woodtype] .custom-form input{min-width:0;font-size:16px}
+ html[data-mobile-page=woodtype] .ink-dialog{width:calc(100vw - 20px);max-height:calc(100dvh - 20px);padding:16px;overflow:auto}
+ html[data-mobile-page=woodtype] .ink-dialog-head{position:sticky;top:-16px;z-index:2;background:#ece0ca;padding:8px 0}
+ html[data-mobile-page=woodtype] .ink-dialog-head button,html[data-mobile-page=woodtype] .ink-dialog-actions button{min-height:44px}
+ html[data-mobile-page=woodtype] .preset-list{flex-wrap:wrap;gap:5px}
+ html[data-mobile-page=woodtype] .preset-list button{font-size:12px;min-height:36px}
+ html[data-mobile-page=opera]{scroll-snap-type:none}
+ html[data-mobile-page=opera] header{position:relative;padding:12px 16px;min-height:56px;background:#101813}
+ html[data-mobile-page=opera] .brand{font-size:17px}
+ html[data-mobile-page=opera] .brand span{line-height:1.5}
+ html[data-mobile-page=opera] .stage-viewport{display:flex;flex-direction:column;overflow:visible;height:auto;min-height:0}
+ html[data-mobile-page=opera] .stage-box{position:relative;inset:auto;transform:none;order:0;width:100%!important;height:auto!important;aspect-ratio:16/9;flex:none}
+ html[data-mobile-page=opera] .stage{aspect-ratio:16/9;height:auto;width:100%}
+ html[data-mobile-page=opera] .layer.stage-bg{object-fit:contain}
+ html[data-mobile-page=opera] .stage-caption{position:relative;inset:auto;order:1;max-width:none;margin:8px 12px 0;padding:9px 12px;font-size:11px;background:#1b251e;gap:2px;pointer-events:auto}
+ html[data-mobile-page=opera] .stage-caption strong{font-size:12px}
+ html[data-mobile-page=opera] .stage-caption span,html[data-mobile-page=opera] .stage-caption small{font-size:11px;line-height:1.55}
+ html[data-mobile-page=opera] .subtitles{order:2;min-height:0;position:static;margin:8px 12px 0;width:auto}
+ html[data-mobile-page=opera] .subtitles:has(#line:empty){display:none}
+ html[data-mobile-page=opera] .stage-viewport .transport{position:static;transform:none;order:3;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));width:calc(100% - 24px);margin:10px auto 0;padding:9px;gap:6px;border-radius:8px}
+ html[data-mobile-page=opera] .transport .seek{grid-column:1/-1;min-width:0;gap:8px;margin:0 0 4px;order:0}
+ html[data-mobile-page=opera] .seek span{font-size:12px;flex:none}
+ html[data-mobile-page=opera] .seek input{min-width:0}
+ html[data-mobile-page=opera] .transport button{min-width:0!important;min-height:44px;font-size:11px;padding:6px 3px}
+ html[data-mobile-page=opera] .stage-viewport .play-markers{position:static;transform:none;order:4;margin:10px 12px 0;width:calc(100% - 24px)}
+ html[data-mobile-page=opera] .play-markers button{min-height:42px;font-size:11px}
+ html[data-mobile-page=opera] .stage-viewport .character-guide{position:static;transform:none;order:5;margin:12px;max-width:none;width:auto}
+ html[data-mobile-page=opera] .character-guide-story{font-size:13px;line-height:1.8}
+ html[data-mobile-page=opera] .character-choice{min-height:42px}
+ html[data-mobile-page=opera] .stage-viewport #status{position:static;transform:none;order:6;margin:10px 16px;font-size:12px;line-height:1.7}
+ html[data-mobile-page=opera] .shade span{font-size:15px;letter-spacing:.08em}
+ html[data-mobile-page=opera] .heading{min-height:0;padding:28px 8px}
+ html[data-mobile-page=opera] .prologue-panel{max-height:calc(100dvh - 20px);overflow-y:auto}
+ html[data-mobile-page=opera] .costume-choices{grid-template-columns:1fr}
+ html[data-mobile-page=opera] .costume-person{height:auto;min-height:78px}
+ html[data-mobile-page=opera] .prologue-actions button{min-height:44px}
+ html[data-mobile-page=sea] body{overflow-y:auto}
+ html[data-mobile-page=sea] .app{height:auto;min-height:100dvh;overflow:visible}
+ html[data-mobile-page=sea] .experience{flex:none;height:auto;min-height:0;overflow:visible}
+ html[data-mobile-page=sea] .visual-area{height:auto;display:block;flex:none;overflow:visible;max-height:none;min-height:0;aspect-ratio:auto}
+ html[data-mobile-page=sea] .stage{position:relative;inset:auto;transform:none;width:100%!important;height:auto!important;aspect-ratio:16/9;max-height:none;overflow:hidden}
+ html[data-mobile-page=sea] .chapter-nav{scrollbar-width:thin;overflow-x:auto;flex-wrap:nowrap}
+ html[data-mobile-page=sea] .chapter-link{min-height:42px;font-size:11px;flex:none;padding:7px 9px}
+ html[data-mobile-page=sea] .intro-inner{padding:28px 20px;max-height:calc(100dvh - 24px);overflow:auto}
+ html[data-mobile-page=sea] .intro h2{font-size:40px;letter-spacing:.14em}
+ html[data-mobile-page=sea] .intro-description{font-size:14px;line-height:1.8}
+ .mobile-sea-reading{position:relative;z-index:1;display:flex;flex-direction:column;gap:12px;padding:16px;background:#f1e8d7;color:#183a40}
+ .mobile-sea-reading .paper-poem{position:static;order:5;flex-direction:column;gap:4px;padding:10px 0;border:0;box-shadow:none;color:#786749}
+ .mobile-sea-reading .paper-poem:before,.mobile-sea-reading .paper-poem:after{display:none}
+ .mobile-sea-reading .paper-poem p{writing-mode:horizontal-tb;padding:0;max-height:none;font-size:12px;letter-spacing:.08em;color:inherit}
+ .mobile-sea-reading .paper-poem-line{font-size:16px!important;font-weight:400}
+ .mobile-sea-reading .painting-title{position:static;order:0;max-width:none;padding:0;background:none;animation:none!important;opacity:1!important;visibility:visible!important;translate:none}
+ .mobile-sea-reading .painting-title h1{font-size:24px;margin:5px 0}
+ .mobile-sea-reading .painting-title p{display:block;font-size:14px;line-height:1.7}
+ .mobile-sea-reading .painting-title #chapterEyebrow{font-size:11px}
+ .mobile-sea-reading .painting-action,.mobile-sea-reading .painting-next,.mobile-sea-reading .painting-skip{position:static!important;left:auto!important;top:auto!important;transform:none;order:1;width:auto;height:auto;min-height:44px;padding:10px 16px;border-radius:4px;animation:none;box-shadow:none;background:#17383e;color:#fff2dc;font-size:14px}
+ .mobile-sea-reading .painting-action:before,.mobile-sea-reading .painting-action:after{display:none}
+ .mobile-sea-reading .hotspot-layer{position:static;order:2;display:flex;flex-wrap:wrap;gap:8px;pointer-events:auto}
+ .mobile-sea-reading .hotspot,.mobile-sea-reading .ship-ripple{position:static!important;transform:none!important;min-height:40px;width:auto;height:auto;padding:8px 10px;border-radius:4px;font-size:12px;line-height:1.4;flex:none;background:#e5dcc7;color:#183a40;border:1px solid #a9936c;box-shadow:none}
+ .mobile-sea-reading .ship-ripple:before,.mobile-sea-reading .ship-ripple:after{display:none}
+ .mobile-sea-reading .ship-ripple i{display:none}
+ .mobile-sea-reading .ship-ripple span{position:static;transform:none;display:block;padding:0;background:none;color:inherit;font-size:12px;white-space:normal}
+ .mobile-sea-reading .painting-action>span{font-size:14px}
+ .mobile-sea-reading .painting-tools{position:static;order:3;display:flex;gap:8px}
+ .mobile-sea-reading .painting-tools button{min-height:40px;flex:1;border-radius:4px;font-size:12px}
+ .mobile-sea-reading .painting-status{position:static;order:4;max-width:none;margin:0;font-size:12px;background:transparent;padding:0}
+ html[data-mobile-page=sea] .modal-backdrop{padding:10px}
+ html[data-mobile-page=sea] .knowledge-panel{max-height:calc(100dvh - 20px);overflow-y:auto;width:100%}
+ html[data-mobile-page=sea] .knowledge-art{min-height:0;padding:12px}
+ html[data-mobile-page=sea] .knowledge-body{padding:24px 18px}
+ html[data-mobile-page=sea] .knowledge-body h2{font-size:22px}
+ html[data-mobile-page=sea] .knowledge-body p{font-size:15px;line-height:1.8}
+ html[data-mobile-page=sea] .close-button{position:sticky;top:8px;justify-self:end;grid-column:1/-1;margin:8px 8px -46px 0;z-index:4;background:#f9f2df;min-height:42px;min-width:42px}
+ html[data-mobile-page=sea] .ship-sheet{height:calc(100dvh - 20px);max-height:calc(100dvh - 20px);padding:16px}
+ html[data-mobile-page=sea] .ship-backdrop{padding:10px}
+ html[data-mobile-page=sea] .ship-close{width:44px;height:44px;top:8px;right:8px}
+ html[data-mobile-page=sea] .ship-tabs button,html[data-mobile-page=sea] .ship-footer button,html[data-mobile-page=sea] .ship-image-tabs button{min-height:42px}
+ html[data-mobile-page=sea] .ending.visible{position:fixed;inset:0;z-index:25;padding:12px}
+ html[data-mobile-page=sea] .ending-content{width:100%;max-height:calc(100dvh - 24px);padding:22px}
+ html[data-mobile-page=sea] .ending-summary,html[data-mobile-page=sea] .ending-next p{font-size:14px;line-height:1.8}
+ html[data-mobile-page=present] .masthead{left:16px;top:18px}
+ html[data-mobile-page=present] .title-block{top:20%;left:16px}
+ html[data-mobile-page=present] .title-block h1{font-size:27px}
+ html[data-mobile-page=present] .flow-control{right:8px;max-width:88px;top:32%}
+ html[data-mobile-page=present] .flow-control label{font-size:12px}
+ html[data-mobile-page=present] .flow-control small{font-size:10px}
+ html[data-mobile-page=present] .story-trigger{bottom:18px;max-width:calc(100% - 32px);min-height:48px}
+ html[data-mobile-page=present] .motion-toggle{bottom:110px;font-size:11px}
+ html[data-mobile-page=present] .story-content{padding:65px 20px 26px}
+ html[data-mobile-page=present] .story-line{font-size:18px;line-height:1.8}
+ html[data-mobile-page=finale] .final-scene{display:block;height:auto;overflow:visible;min-height:100dvh;padding:0 0 20px}
+ html[data-mobile-page=finale] .final-stage{width:100%;display:flex;flex-direction:column;gap:16px;aspect-ratio:auto}
+ html[data-mobile-page=finale] .final-art{width:100%;flex:none}
+ .mobile-final-reading{padding:0 20px;text-align:left}
+ .mobile-final-reading h1{font-size:28px;letter-spacing:.12em;font-weight:400;text-align:center;margin:2px 0 10px}
+ .mobile-final-reading p{font-size:15px;line-height:1.9;margin:8px 0}
+ .mobile-final-reading .mobile-final-lead{text-align:center;font-size:17px}
+ html[data-mobile-page=finale] .poetry{position:relative;inset:auto;width:calc(100% - 28px);margin:0 auto;padding:20px 16px;gap:12px}
+ html[data-mobile-page=finale] .original-phrase{font-size:25px;line-height:1.65}
+ html[data-mobile-page=finale] .poetry button{font-size:16px;min-height:44px}
+ html[data-mobile-page=finale] .final-nav{position:relative;inset:auto;margin:20px 16px 0}
+ html[data-mobile-page=wood-intro] dialog,html[data-mobile-page=bridge] .image-lightbox{width:calc(100vw - 20px);max-width:calc(100vw - 20px);max-height:calc(100dvh - 20px);overflow:auto;padding:12px}
+ html[data-mobile-page=wood-intro] .photo-dialog-head{position:sticky;top:-12px;z-index:2;background:#f1e8d6;padding:8px 0;gap:10px}
+ html[data-mobile-page=bridge] .image-lightbox>button{position:sticky;top:0;z-index:2;min-height:44px;background:#ede3cf}
+}
+@media(min-width:761px){.mobile-final-reading{display:none}.mobile-sea-reading{display:contents}.mobile-workshop-art{display:contents}}

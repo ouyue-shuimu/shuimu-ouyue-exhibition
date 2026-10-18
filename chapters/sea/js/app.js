@@ -48,7 +48,7 @@ const ui={stage:byId('stage'),nav:byId('chapterNav'),bgs:byId('backgrounds'),act
 const state={current:0,unlocked:0,phase:[0,0,0,0,0],completed:[false,false,false,false,false],travel:[0,0,0,0,0],started:false,ready:false,sound:false,action:null,transition:null,lastFocus:null,sceneStart:performance.now()};
 let shipPausedAt=null;
 let updateSceneUI=()=>{};
-const shipInspection=new ShipInspection({sceneAudio:true,soundEnabled:()=>state.sound,toggleSound:()=>toggleSound(),onOpen(){shipPausedAt=performance.now();},onClose(){if(state.action&&shipPausedAt!==null)state.action.start+=performance.now()-shipPausedAt;shipPausedAt=null;ui.stage.querySelector('[data-ship]')?.classList.add('observed');updateUI();}});
+const shipInspection=new ShipInspection({sceneAudio:true,soundEnabled:()=>state.sound,toggleSound:()=>toggleSound(),onOpen(){shipPausedAt=performance.now();},onClose(){if(state.action&&shipPausedAt!==null)state.action.start+=performance.now()-shipPausedAt;shipPausedAt=null;document.querySelector('[data-ship]')?.classList.add('observed');updateUI();}});
 let water={update(){}};
 const images={};
 const WEDDING_FADE=3200;
@@ -87,7 +87,7 @@ function setup(){
  ui.start.disabled=true;ui.start.textContent='画卷载入中…';
 }
 function hotspots(){
- const layer=ui.stage.querySelector('.hotspot-layer');
+ const layer=document.querySelector('.hotspot-layer');
  layer.hidden=!state.started||!state.ready||!!state.transition||(state.current===4&&state.completed[4]);
  if(layer.dataset.scene!==String(state.current)){
   layer.dataset.scene=state.current;
