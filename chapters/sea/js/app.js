@@ -323,4 +323,4 @@ function bind(){
 setup();updateSceneUI=createSceneUI(ui,state);bind();updateUI();
 loading.then(()=>{prepareWeddingLayers();state.ready=true;ui.start.disabled=false;ui.start.textContent='开始行舟 →';updateUI();requestAnimationFrame(tick);}).catch(e=>{console.error(e);ui.start.textContent='素材载入失败，请刷新重试';ui.status.textContent=`素材读取失败：${e.message}`;});
 // Optional water rendering must not block loading the rest of the experience.
-import('./water-scene.js').then(({WaterScene})=>{water=new WaterScene(ui.stage,console.warn);}).catch(e=>console.warn('水面暂不可用，其他交互正常。',e));
+import('./water-scene.js?v=20261018-water1').then(({WaterScene})=>{water=new WaterScene(ui.stage,console.warn);}).catch(e=>console.warn('水面暂不可用，其他交互正常。',e));
