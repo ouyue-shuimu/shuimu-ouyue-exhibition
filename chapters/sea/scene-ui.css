@@ -1,0 +1,56 @@
+/* Full painting first: its coordinates and all canvas actors scale together. */
+.topbar{height:58px;min-height:58px}.visual-area{display:grid;place-items:center;overflow:hidden;background:#102c34}.stage{flex:none;margin:0;max-width:100%;max-height:100%;aspect-ratio:16/9;container-type:inline-size}.control-area{display:none}.scene-caption{display:none}.scene-count{top:12px;right:14px;font-size:11px;padding:6px 9px}
+.painting-title{position:absolute;left:3%;top:4%;z-index:4;pointer-events:none;color:#18383f;text-shadow:0 1px 5px #fff7df;background:linear-gradient(90deg,#f8eed9d9,transparent);padding:8px 22px 10px 10px;max-width:62%}.painting-title #chapterEyebrow{font-size:clamp(9px,1cqw,13px);letter-spacing:.15em}.painting-title h1{font-size:clamp(18px,2.5cqw,34px);font-weight:500;letter-spacing:.15em;margin:5px 0}.painting-title p{font-size:clamp(10px,1.1cqw,15px);margin:0;line-height:1.6}.painting-title.arriving{animation:painting-title 6s ease both}
+.painting-tools{position:absolute;right:14px;top:48px;display:flex;gap:8px;z-index:6}.painting-tools button,.painting-skip{border:1px solid #f4e9d26b;border-radius:20px;background:#15343cd9;color:#fff0d8;font-size:12px;padding:7px 12px;margin:0;backdrop-filter:blur(4px)}
+.painting-action{position:absolute;z-index:6;transform:translate(-50%,-50%);width:46px;height:46px;border:1px solid #fff3d9;border-radius:50%;background:#163c43b8;color:transparent;font-size:0;padding:0;box-shadow:0 0 20px #fff2c555;animation:painting-enter .7s ease both;overflow:visible}
+.painting-action::before,.painting-action::after{content:"";position:absolute;inset:-1px;border:1px solid #fff2c9;border-radius:50%;pointer-events:none;animation:painting-ripple 2.8s ease-out infinite}.painting-action::after{animation-delay:1.4s}
+.painting-action{color:#fff3d9;font-size:11px;line-height:1.3;word-break:keep-all;width:52px;height:52px;padding:8px}.painting-action:hover{background:#8d7049;box-shadow:0 0 28px #fff0c899}.painting-action:focus-visible{outline:3px solid #fff5df;outline-offset:5px}
+.painting-next{position:absolute;right:3%;bottom:5%;z-index:6;background:#17383ee8;border:1px solid #ecd8ae;color:#fff2dc;padding:12px 20px;border-radius:30px;box-shadow:0 5px 20px #15343c33;animation:painting-enter 1s ease both;font-size:clamp(11px,1.2cqw,16px)}.painting-next:hover{background:#8d7049}.painting-status{position:absolute;bottom:3%;left:3%;z-index:5;font-size:clamp(10px,1cqw,14px);padding:5px 9px;background:#f5ead7dd;color:#18383f;border-radius:3px;max-width:48%;pointer-events:none}.painting-skip{position:absolute;right:3%;bottom:3%;z-index:6}.painting-busy .hotspot{opacity:.65}.hotspot{font-size:clamp(9px,1cqw,14px);padding:5px 9px}.hotspot:hover,.hotspot:focus-visible{opacity:1}.ending{z-index:5}.ending-content{max-height:86%;overflow:auto;pointer-events:auto}.ending strong{font-size:clamp(22px,4cqw,54px)}.ending-summary{font-size:clamp(10px,1.4cqw,17px)}.ending-next p{font-size:clamp(10px,1.1cqw,14px)}
+@keyframes painting-ripple{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.85);opacity:0}}
+@keyframes painting-enter{from{opacity:0;filter:blur(4px)}to{opacity:1;filter:blur(0)}}
+@keyframes painting-title{0%{opacity:0;translate:0 8px}15%,70%{opacity:1;translate:0 0}100%{opacity:0;visibility:hidden}}
+@media(max-width:850px){.topbar{height:auto;min-height:58px}.chapter-link{padding:7px}.painting-tools{top:40px;gap:4px}.painting-tools button{font-size:10px;padding:5px 8px}.painting-action{width:44px;height:44px;font-size:10px;padding:5px}.painting-title p{display:none}.painting-title{top:2%;left:2%}.painting-next{padding:8px 12px}.ship-ripple{width:44px;height:44px}.ship-ripple span{top:40px;font-size:10px}.hotspot{padding:4px 6px;font-size:9px}.painting-status{max-width:58%;bottom:2%}.painting-next{bottom:3%}.scene-count{font-size:9px;top:8px}}
+@media(prefers-reduced-motion:reduce){.painting-title.arriving{animation:none;opacity:0}.painting-action,.painting-action::before,.painting-action::after,.painting-next{animation:none}.painting-action::before{inset:-5px;opacity:.5}.painting-action::after{display:none}}
+
+/* Fill the available view without stretching the artwork; excess remains scrollable. */
+.visual-area{display:block;overflow:auto;overscroll-behavior:contain}
+.stage{max-width:none;max-height:none;margin:0;flex:none}
+.painting-action{display:grid;place-items:center;width:64px;height:64px;padding:0;text-align:center;writing-mode:horizontal-tb;line-height:1;letter-spacing:0;white-space:nowrap}
+.painting-action>span{display:block;position:relative;z-index:1;line-height:1.4;font-size:12px;text-align:center;transform:none;pointer-events:none}
+@media(max-width:850px){.painting-action{width:56px;height:56px;padding:0}.painting-action>span{font-size:11px}}
+
+/* Mount the complete painting on warm paper, with room for a fine gold frame. */
+.visual-area{display:grid;place-items:center;overflow:hidden;background-color:#eee5d3;background-image:repeating-linear-gradient(8deg,#997d4910 0px,transparent 1px,transparent 6px),repeating-linear-gradient(97deg,#fffaf51c 0px,transparent 1px,transparent 9px),radial-gradient(ellipse at 35% 20%,#fff9ecaa,transparent 65%),radial-gradient(ellipse at 90% 85%,#c6ae8240,transparent 70%)}
+.stage{margin:0;max-width:none;max-height:none;outline:1px solid #b49a65;outline-offset:3px;box-shadow:0 0 0 3px #f8f0df,0 4px 16px #6b542525;background:#eee5d3}
+.stage-vignette{background:linear-gradient(90deg,#efe4ce35,transparent 2%,transparent 98%,#efe4ce35)}
+
+/* Original supplied painting, styled as a quiet watermark on the paper only. */
+.visual-area{isolation:isolate}
+.visual-area::before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background:url("assets/heritage/江山胜览图-宣纸暗纹.png") center/cover no-repeat;filter:grayscale(1) brightness(1.55) contrast(1.45) sepia(.25);opacity:.14;mix-blend-mode:multiply}
+.visual-area>.stage{z-index:1}
+.ending-content{min-width:0;overflow-x:hidden;overflow-y:auto}
+
+/* A quiet vertical wood-type inspired inscription on the paper, behind the artwork. */
+.paper-poem{position:absolute;right:clamp(12px,2.3vw,48px);top:15%;z-index:0;display:flex;flex-direction:row-reverse;align-items:flex-start;gap:clamp(8px,1vw,18px);pointer-events:none;color:rgb(91 69 43 / 26%);font-family:"SimSun","Songti SC","STSong",serif;user-select:none}
+.paper-poem p{writing-mode:vertical-rl;text-orientation:upright;margin:0}
+.paper-poem-line{font-size:clamp(25px,2.5vw,45px);font-weight:700;letter-spacing:.32em;line-height:1.2;text-shadow:.35px .2px 0 rgb(91 69 43 / 10%);border-inline-start:1px solid rgb(116 89 50 / 13%);padding-inline-start:12px}
+.paper-poem-source{font-size:clamp(10px,.8vw,13px);line-height:1.9;letter-spacing:.13em;padding-top:12px;max-height:65vh;color:rgb(91 69 43 / 30%)}
+@media(max-width:600px){.paper-poem{top:3%;right:7%;gap:10px}.paper-poem-line{font-size:22px;letter-spacing:.12em}.paper-poem-source{font-size:10px;max-height:40vh}}
+
+/* Double ruled woodblock page border enclosing the vertical inscription. */
+.paper-poem{padding:20px 12px 18px;border:3px double rgb(91 69 43 / 25%);box-shadow:1px 0 0 rgb(91 69 43 / 7%),inset 0 0 0 .5px rgb(91 69 43 / 9%)}
+.paper-poem::before,.paper-poem::after{content:"";position:absolute;pointer-events:none;width:10px;height:10px;border-color:rgb(91 69 43 / 20%);border-style:solid}
+.paper-poem::before{top:-2px;right:-2px;border-width:2px 2px 0 0}
+.paper-poem::after{bottom:-2px;left:-2px;border-width:0 0 2px 2px}
+.paper-poem-line{border-inline-start:0;padding-inline-start:0}
+@media(max-width:600px){.paper-poem{padding:12px 8px}}
+
+.has-route-figure{width:min(1100px,100%);grid-template-columns:1.15fr 1fr}
+.has-route-figure .knowledge-art{display:flex;flex-direction:column;align-items:center;justify-self:stretch;min-width:0;width:100%;background:#f7f1e4;padding:88px 25px 25px;color:#384b49;text-shadow:none;letter-spacing:normal;min-height:0}
+.route-figure{width:100%;min-width:0;margin:0}.route-figure>a{display:flex;justify-content:center;width:100%}.route-figure img{display:block;max-width:100%;width:auto;max-height:54vh;object-fit:contain;margin:0 auto}.route-figure--tall img{max-height:68vh}.route-figure figcaption{font-size:12px;line-height:1.7;margin-top:12px;text-align:center}.has-route-figure .source-list{font-size:12px;line-height:1.7}
+.source-list{line-height:1.7}.source-list .source-heading{font-size:12px;font-weight:600;color:#796d59}.source-list a,.source-list span{font-size:12px;line-height:1.7}.source-list span{color:#54716c}
+@media(max-width:850px){.has-route-figure{grid-template-columns:1fr}.has-route-figure .knowledge-art{padding:22px}.route-figure img{max-height:50vh}}
+
+#modalText{white-space:pre-line}
+
+.translation-comparison{margin:18px 0 0}.translation-frame{position:relative;line-height:0}.translation-frame img{display:block;width:100%;height:auto}.translation-area{position:absolute;border:2px solid #ffe1a0;box-shadow:0 0 0 1px #775128,inset 0 0 16px #f7da9e44;pointer-events:none;box-sizing:border-box}.translation-comparison figcaption{font-size:12px;line-height:1.7;margin-top:8px;color:#67563e}
